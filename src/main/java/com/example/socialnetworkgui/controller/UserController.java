@@ -86,6 +86,7 @@ public class UserController implements Observer<UserChangeEvent> {
         Utilizator selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null){
             showMessageTaskEditDialog(selectedUser);
+            update(null);
         }
         else{
             MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator.");

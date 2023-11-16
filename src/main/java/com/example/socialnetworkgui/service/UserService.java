@@ -78,8 +78,14 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
 
     public boolean addEntity(String firstName, String lastName) throws RepositoryExceptions {
         Utilizator entity = new Utilizator(firstName, lastName);
-        entity.setId(generateID());
-        return userRepo.save(entity).isEmpty();
+        //entity.setId(generateID());
+        Optional<Utilizator> savedUser = userRepo.save(entity);
+        if (savedUser.isEmpty()){
+            notifyObservers(new UserChangeEvent(null, null));
+            return true;
+        }
+        return false;
+        //return userRepo.save(entity).isEmpty();
     }
 
     @Override
@@ -95,7 +101,13 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
     public boolean updateEntity(Long id, String firstName, String lastName) throws RepositoryExceptions{
         Utilizator entity = new Utilizator(firstName, lastName);
         entity.setId(id);
-        return userRepo.update(entity).isEmpty();
+        Optional<Utilizator> updatedUser = userRepo.update(entity);
+        if (updatedUser.isEmpty()){
+            notifyObservers(new UserChangeEvent(null, null));
+            return true;
+        }
+        return false;
+        //return userRepo.update(entity).isEmpty();
     }
 
     /**
