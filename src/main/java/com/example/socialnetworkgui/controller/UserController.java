@@ -17,12 +17,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 public class UserController implements Observer<UserChangeEvent> {
@@ -44,8 +46,10 @@ public class UserController implements Observer<UserChangeEvent> {
     public void setUserService(UserService userService, FriendshipService friendshipService){
         this.userService = userService;
         this.friendshipService = friendshipService;
+
         userService.addObserver(this);
         friendshipService.addObserver(this);
+
         initModel();
     }
     @FXML
@@ -98,7 +102,7 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     @FXML
-    public void handleFriendshipsUser(ActionEvent event){
+    public void handleFriendshipsUser(ActionEvent event) throws ServiceExceptions, RepositoryExceptions{
         Utilizator selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null){
             showFriendshipEditDialog(selectedUser);
@@ -114,6 +118,9 @@ public class UserController implements Observer<UserChangeEvent> {
             loader.setLocation(getClass().getResource("views/editUser.fxml"));
             AnchorPane root = loader.load();
             Stage dialogStage = new Stage();
+
+            Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
+            dialogStage.getIcons().add(icon);
             dialogStage.setTitle("Edit User");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             Scene scene = new Scene(root);
@@ -127,12 +134,16 @@ public class UserController implements Observer<UserChangeEvent> {
             e.printStackTrace();
         }
     }
-    public void showFriendshipEditDialog(Utilizator user){
+    public void showFriendshipEditDialog(Utilizator user) throws RepositoryExceptions, ServiceExceptions{
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("views/editFriendship.fxml"));
             AnchorPane root = loader.load();
             Stage dialogStage = new Stage();
+
+            Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
+            dialogStage.getIcons().add(icon);
+
             dialogStage.setTitle("Edit the user's friendships");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             Scene scene = new Scene(root);

@@ -13,17 +13,18 @@
             <TableColumn fx:id="friendsFromColumn" prefWidth="167.00003051757812" text="Friends From" />
         </columns>
       </TableView>
-       <TextField layoutX="593.0" layoutY="68.0" />
-      <TextField layoutX="593.0" layoutY="113.0" />
-      <TextField layoutX="593.0" layoutY="159.0" />
-      <Button layoutX="640.0" layoutY="310.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Delete friendship" />
-      <Button layoutX="478.0" layoutY="310.0" mnemonicParsing="false" text="Save new friendship" />
+       <TextField fx:id="idTextField" layoutX="593.0" layoutY="68.0" />
+      <TextField fx:id="firstNameTextField" layoutX="593.0" layoutY="113.0" />
+      <TextField fx:id="lastNameTextField" layoutX="593.0" layoutY="159.0" />
+      <Button layoutX="640.0" layoutY="310.0" mnemonicParsing="false" onAction="#handleDeleteFriendship" prefHeight="26.0" prefWidth="122.0" text="Delete friendship" />
+      <Button layoutX="478.0" layoutY="310.0" mnemonicParsing="false" onAction="#handleAddFriendship" text="Save new friendship" />
       <Label layoutX="510.0" layoutY="117.0" text="First name:" />
       <Label layoutX="510.0" layoutY="163.0" text="Last name:" />
       <Label layoutX="539.0" layoutY="72.0" text="ID:" />
-      <Button layoutX="477.0" layoutY="369.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Filter friendships" />
+      <Button onAction="#handleFilterFriendships" layoutX="477.0" layoutY="369.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Filter friendships" />
       <Label layoutX="520.0" layoutY="211.0" text="Month:" />
-      <TextField layoutX="593.0" layoutY="207.0" />
+      <TextField fx:id="monthTextField" layoutX="593.0" layoutY="207.0" />
+      <Button fx:id="reloadButton" onAction="#handleReload" layoutX="640.0" layoutY="370.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Reload friendships" />
       
    </children>
 </AnchorPane>

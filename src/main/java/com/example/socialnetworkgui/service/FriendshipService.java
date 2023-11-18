@@ -1,5 +1,6 @@
 package com.example.socialnetworkgui.service;
 
+import com.example.socialnetworkgui.DTO.FriendshipDTO;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
@@ -57,7 +58,8 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>, 
             notifyObservers(new UserChangeEvent(null, null));
             return true;
         }
-        return false;
+        throw new ServiceExceptions("Nu exista acest ID.");
+        //return false;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.socialnetworkgui.presentation;
 
+import com.example.socialnetworkgui.DTO.FriendshipDTO;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
@@ -112,7 +113,7 @@ public class ConsoleUI {
             System.out.println("Utilizatorul nu exista");
             return;
         }
-        Iterable<String> friendships = userService.loadUserFriendsMonth(id,month);
+        Iterable<FriendshipDTO> friendships = userService.loadUserFriendsMonth(id,month);
         int sizeOfIterable = ((Collection<?>) friendships).size();
         if (sizeOfIterable == 0){
             System.out.println("Utilizatorul nu s-a imprietenit cu nimeni in aceasta luna.");

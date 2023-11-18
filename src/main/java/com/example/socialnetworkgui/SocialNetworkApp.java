@@ -16,8 +16,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class SocialNetworkApp extends Application {
     private Validator<Utilizator> userValidator;
@@ -46,6 +48,10 @@ public class SocialNetworkApp extends Application {
     public void initView(Stage stage) throws IOException{
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("views/mainView.fxml"));
+
+            Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
+            stage.getIcons().add(icon);
+
             stage.setScene(new Scene(fxmlLoader.load()));
 
             UserController userController = fxmlLoader.getController();

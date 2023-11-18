@@ -118,7 +118,7 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
      * @returns a list of all the friendships containing the user and created in that month
      * @throws RepositoryExceptions: if the user is null
      */
-    public Iterable<String> loadUserFriendsMonth(Long id, int month) throws RepositoryExceptions{
+    public Iterable<FriendshipDTO> loadUserFriendsMonth(Long id, int month) throws RepositoryExceptions{
         ArrayList<Prietenie> prietenii = new ArrayList<>();
         Optional<Utilizator> user = userRepo.findOne(id);
         if (user.isPresent()){
@@ -136,12 +136,30 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
                 p.ifPresent(prietenii::add);
             }
         }
+        /*
         return prietenii.stream()
               .filter(friendship -> friendship.getDate().getMonthValue() == month)
             .map(friendship -> Objects.equals(friendship.getUser1().getId(), user.get().getId()) ?
                     friendship.getUser2().getLastName() + " | " + friendship.getUser2().getFirstName() + " | " + friendship.getDate():
                     friendship.getUser1().getLastName() + " | " + friendship.getUser1().getFirstName() + " | " + friendship.getDate())
           .toList();
+
+         */
+        return prietenii.stream()
+                .filter(friendship -> friendship.getDate().getMonthValue() == month)
+                .map(prietenie -> {
+                    Utilizator friend = (Objects.equals(prietenie.getId().getLeft(), id))
+                            ? prietenie.getUser2()
+                            : prietenie.getUser1();
+
+                    return new FriendshipDTO(
+                            friend.getId(),
+                            friend.getFirstName(),
+                            friend.getLastName(),
+                            prietenie.getDate()
+                    );
+                })
+                .toList();
     }
 
     public Iterable<FriendshipDTO> loadUserFriendsDTO(Long id) throws RepositoryExceptions, ServiceExceptions {
