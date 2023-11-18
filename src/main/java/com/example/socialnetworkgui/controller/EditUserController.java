@@ -20,12 +20,6 @@ public class EditUserController {
     private TextField textFieldFirstName;
     @FXML
     private TextField textFieldLastName;
-    @FXML
-    Button saveButton;
-    @FXML
-    Button cancelButton;
-    @FXML
-    Button clearButton;
     private UserService service;
     Stage dialogStage;
     Utilizator user;

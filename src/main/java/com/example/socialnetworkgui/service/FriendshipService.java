@@ -6,12 +6,18 @@ import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 import com.example.socialnetworkgui.exceptions.ServiceExceptions;
 import com.example.socialnetworkgui.repository.Repository;
+import com.example.socialnetworkgui.utils.events.UserChangeEvent;
+import com.example.socialnetworkgui.utils.observer.Observable;
+import com.example.socialnetworkgui.utils.observer.Observer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
-public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>{
+public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>, Observable<UserChangeEvent> {
     private Repository<Tuple<Long, Long>, Prietenie> friendshipRepo;
+    private List<Observer<UserChangeEvent>> observers = new ArrayList<>();
     public FriendshipService(Repository<Tuple<Long,Long>, Prietenie> friendshipRepo){
         this.friendshipRepo = friendshipRepo;
     }
@@ -47,7 +53,11 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>{
             throw new ServiceExceptions("Prietenia exista deja");
         }
         Optional<Prietenie> p = friendshipRepo.save(entity);
-        return p.isEmpty();
+        if (p.isEmpty()){
+            notifyObservers(new UserChangeEvent(null, null));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -64,6 +74,7 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>{
         Tuple<Long, Long> newID = new Tuple<>(id1, id2);
         Optional<Prietenie> friendship = friendshipRepo.delete(newID);
         if (friendship.isPresent()){
+            notifyObservers(new UserChangeEvent(null, null));
             return friendship.get();
         }
         throw new ServiceExceptions("Nu exista aceasta prietenie!");
@@ -82,5 +93,20 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>{
      */
     public Optional<Prietenie> getEntity(Tuple<Long,Long> id) throws RepositoryExceptions{
         return friendshipRepo.findOne(id);
+    }
+
+    @Override
+    public void addObserver(Observer<UserChangeEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<UserChangeEvent> e) {
+        observers.remove(e);
+    }
+
+    @Override
+    public void notifyObservers(UserChangeEvent t) {
+        observers.stream().forEach(x->x.update(t));
     }
 }

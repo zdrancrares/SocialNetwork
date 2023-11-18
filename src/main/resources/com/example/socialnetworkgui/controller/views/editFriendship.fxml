@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="426.0" prefWidth="795.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.EditFriendshipController">
+   <children>
+      <TableView fx:id="tableView" layoutX="14.0" layoutY="32.0" prefHeight="376.0" prefWidth="444.0">
+        <columns>
+          <TableColumn fx:id="friendIdColumn" prefWidth="51.39999008178711" text="ID" />
+          <TableColumn fx:id="firstNameColumn" prefWidth="103.19998168945312" text="First Name" />
+            <TableColumn fx:id="lastNameColumn" minWidth="0.0" prefWidth="121.0" text="Last Name" />
+            <TableColumn fx:id="friendsFromColumn" prefWidth="167.00003051757812" text="Friends From" />
+        </columns>
+      </TableView>
+       <TextField layoutX="593.0" layoutY="68.0" />
+      <TextField layoutX="593.0" layoutY="113.0" />
+      <TextField layoutX="593.0" layoutY="159.0" />
+      <Button layoutX="640.0" layoutY="310.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Delete friendship" />
+      <Button layoutX="478.0" layoutY="310.0" mnemonicParsing="false" text="Save new friendship" />
+      <Label layoutX="510.0" layoutY="117.0" text="First name:" />
+      <Label layoutX="510.0" layoutY="163.0" text="Last name:" />
+      <Label layoutX="539.0" layoutY="72.0" text="ID:" />
+      <Button layoutX="477.0" layoutY="369.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Filter friendships" />
+      <Label layoutX="520.0" layoutY="211.0" text="Month:" />
+      <TextField layoutX="593.0" layoutY="207.0" />
+      
+   </children>
+</AnchorPane>

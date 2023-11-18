@@ -3,6 +3,7 @@ package com.example.socialnetworkgui.controller;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 import com.example.socialnetworkgui.exceptions.ServiceExceptions;
+import com.example.socialnetworkgui.service.FriendshipService;
 import com.example.socialnetworkgui.service.UserService;
 import com.example.socialnetworkgui.utils.observer.Observer;
 import com.example.socialnetworkgui.utils.events.UserChangeEvent;
@@ -27,6 +28,7 @@ import java.util.stream.StreamSupport;
 public class UserController implements Observer<UserChangeEvent> {
 
     private UserService userService;
+    private FriendshipService friendshipService;
     ObservableList<Utilizator> model = FXCollections.observableArrayList();
 
     @FXML
@@ -39,9 +41,11 @@ public class UserController implements Observer<UserChangeEvent> {
     TableColumn<Utilizator, Long> idColumn;
 
 
-    public void setUserService(UserService userService){
+    public void setUserService(UserService userService, FriendshipService friendshipService){
         this.userService = userService;
+        this.friendshipService = friendshipService;
         userService.addObserver(this);
+        friendshipService.addObserver(this);
         initModel();
     }
     @FXML
@@ -78,14 +82,14 @@ public class UserController implements Observer<UserChangeEvent> {
 
     @FXML
     public void handleAddUser(ActionEvent event){
-        showMessageTaskEditDialog(null);
+        showUserEditDialog(null);
     }
 
     @FXML
     public void handleUpdateUser(ActionEvent event){
         Utilizator selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null){
-            showMessageTaskEditDialog(selectedUser);
+            showUserEditDialog(selectedUser);
             update(null);
         }
         else{
@@ -93,7 +97,18 @@ public class UserController implements Observer<UserChangeEvent> {
         }
     }
 
-    public void showMessageTaskEditDialog(Utilizator utilizator){
+    @FXML
+    public void handleFriendshipsUser(ActionEvent event){
+        Utilizator selectedUser = tableView.getSelectionModel().getSelectedItem();
+        if (selectedUser != null){
+            showFriendshipEditDialog(selectedUser);
+        }
+        else{
+            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator.");
+        }
+    }
+
+    public void showUserEditDialog(Utilizator utilizator){
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("views/editUser.fxml"));
@@ -106,6 +121,25 @@ public class UserController implements Observer<UserChangeEvent> {
 
             EditUserController editUserController = loader.getController();
             editUserController.setService(userService, dialogStage, utilizator);
+
+            dialogStage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void showFriendshipEditDialog(Utilizator user){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("views/editFriendship.fxml"));
+            AnchorPane root = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit the user's friendships");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+
+            EditFriendshipController editFriendshipController = loader.getController();
+            editFriendshipController.setFriendshipService(userService, friendshipService, dialogStage, user);
 
             dialogStage.show();
         }catch (IOException e){

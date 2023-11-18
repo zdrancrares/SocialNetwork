@@ -10,6 +10,7 @@ import com.example.socialnetworkgui.domain.validators.Validator;
 import com.example.socialnetworkgui.repository.FriendshipDBRepository;
 import com.example.socialnetworkgui.repository.Repository;
 import com.example.socialnetworkgui.repository.UserDBRepository;
+import com.example.socialnetworkgui.service.FriendshipService;
 import com.example.socialnetworkgui.service.UserService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ public class SocialNetworkApp extends Application {
     private Validator<Utilizator> userValidator;
     private Repository<Long, Utilizator> userRepo;
     private UserService userService;
+    private FriendshipService friendshipService;
     private Validator<Prietenie> friendshipValidator;
     private Repository<Tuple<Long, Long>, Prietenie> friendshipRepo;
 
@@ -32,7 +34,9 @@ public class SocialNetworkApp extends Application {
 
         friendshipValidator = new PrietenieValidator();
         friendshipRepo = new FriendshipDBRepository(friendshipValidator);
+
         userService = new UserService(userRepo, friendshipRepo);
+        friendshipService = new FriendshipService(friendshipRepo);
 
         initView(primaryStage);
         primaryStage.setTitle("SocialNetworkApp");
@@ -45,7 +49,7 @@ public class SocialNetworkApp extends Application {
             stage.setScene(new Scene(fxmlLoader.load()));
 
             UserController userController = fxmlLoader.getController();
-            userController.setUserService(userService);
+            userController.setUserService(userService, friendshipService);
     }
 
     public static void main(String[] args){

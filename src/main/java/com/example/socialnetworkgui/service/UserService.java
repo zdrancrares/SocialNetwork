@@ -1,5 +1,6 @@
 package com.example.socialnetworkgui.service;
 
+import com.example.socialnetworkgui.DTO.FriendshipDTO;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
@@ -141,6 +142,40 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
                     friendship.getUser2().getLastName() + " | " + friendship.getUser2().getFirstName() + " | " + friendship.getDate():
                     friendship.getUser1().getLastName() + " | " + friendship.getUser1().getFirstName() + " | " + friendship.getDate())
           .toList();
+    }
+
+    public Iterable<FriendshipDTO> loadUserFriendsDTO(Long id) throws RepositoryExceptions, ServiceExceptions {
+        ArrayList<Prietenie> prietenii = new ArrayList<>();
+        Optional<Utilizator> user = userRepo.findOne(id);
+        if (user.isPresent()) {
+            for (Utilizator f : user.get().getFriends()) {
+                Tuple<Long, Long> idPereche = new Tuple<>(null, null);
+                if (f.getId() < user.get().getId()) {
+                    idPereche.setLeft(f.getId());
+                    idPereche.setRight(user.get().getId());
+                } else {
+                    idPereche.setRight(f.getId());
+                    idPereche.setLeft(user.get().getId());
+                }
+                Optional<Prietenie> p = prietenieRepo.findOne(idPereche);
+                p.ifPresent(prietenii::add);
+            }
+        }
+
+        return prietenii.stream()
+                .map(prietenie -> {
+                    Utilizator friend = (Objects.equals(prietenie.getId().getLeft(), id))
+                            ? prietenie.getUser2()
+                            : prietenie.getUser1();
+
+                    return new FriendshipDTO(
+                            friend.getId(),
+                            friend.getFirstName(),
+                            friend.getLastName(),
+                            prietenie.getDate()
+                    );
+                })
+                .toList();
     }
 
     /**
