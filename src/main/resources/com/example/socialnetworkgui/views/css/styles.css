@@ -1,0 +1,67 @@
+.vbox {
+    -fx-background-color: linear-gradient(to bottom, #ADD8E6, #3498db);
+}
+
+.button {
+    -fx-background-color: #87CEFA;
+    -fx-background-radius: 20;
+    -fx-padding: 8 16;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: #5D00FF;
+}
+
+
+.table-view {
+    -fx-control-inner-background: #c0afe2;
+}
+
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to right, #7e8f9c, #57606f);
+}
+
+.table-view .column-header,
+.table-view .filler,
+.table-view .column-header-background {
+    -fx-background-insets: 0, 0 0 1 0, 0 0 1 0;
+    -fx-padding: 0.166667em 0.416667em 0.25em 0.416667em;
+}
+
+.table-view .column-header,
+.table-view .filler,
+.table-view .column-header-background,
+.table-view .column {
+    -fx-background-color: linear-gradient(to right, #4ca1af, #c4e0e5);
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #92b8ff;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #3E00B3;
+    -fx-text-fill: black;
+}
+
+.table-cell{
+    -fx-alignment: CENTER;
+}
+
+.table-row-cell {
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 14px;
+    /*
+    -fx-background-color: linear-gradient(to right, #43ce92, #185050);
+
+     */
+    -fx-background-color: linear-gradient(to right, rgba(67, 206, 162, 0.5), rgba(24, 90, 157, 0.4));
+
+    -fx-border-color: white;
+    -fx-border-width: 1 1 0 1;
+}

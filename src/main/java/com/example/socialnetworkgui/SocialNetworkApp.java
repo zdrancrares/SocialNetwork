@@ -52,12 +52,13 @@ public class SocialNetworkApp extends Application {
             Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
             stage.getIcons().add(icon);
 
-            stage.setScene(new Scene(fxmlLoader.load()));
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setScene(scene);
 
             UserController userController = fxmlLoader.getController();
             userController.setUserService(userService, friendshipService);
     }
-
+    //TODO: la delete daca n am selectat nimic, sa afiseze mesaj de warning
     public static void main(String[] args){
         launch(args);
     }

@@ -79,9 +79,13 @@ public class UserController implements Observer<UserChangeEvent> {
                 MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Delete", "Utilizatorul a fost sters cu succes.");
             }
             else{
-                MessageAlert.showErrorMessage(null, "Nu ati selectat niciun student.");
+                MessageAlert.showErrorMessage(null, "Nu exista niciun utilizator cu acest ID.");
             }
         }
+        else{
+            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator.");
+        }
+
     }
 
     @FXML

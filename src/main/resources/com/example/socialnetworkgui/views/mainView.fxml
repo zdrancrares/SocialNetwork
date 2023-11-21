@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="513.0" prefWidth="654.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserController">
+<VBox alignment="CENTER" prefHeight="514.0" prefWidth="654.0" spacing="20.0" styleClass="vbox" stylesheets="@../views/css/styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserController">
+    <stylesheets>
+        <URL value="@../views/css/styles.css" />
+    </stylesheets>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
    <children>
-      <TableView fx:id="tableView" prefHeight="360.0" prefWidth="614.0">
+      <AnchorPane prefHeight="54.0" prefWidth="614.0">
+         <children>
+            <Label layoutX="189.0" layoutY="3.0" prefHeight="38.0" prefWidth="333.0" text="SOCIAL NETWORK APP" textFill="#1206bc">
+               <font>
+                  <Font name="Britannic Bold" size="24.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="38.0" fitWidth="38.0" layoutX="438.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: #4169E1;">
+               <image>
+                  <Image url="@../icons/mainViewImage2.png" />
+               </image></ImageView>
+         </children>
+      </AnchorPane>
+      <TableView fx:id="tableView" prefHeight="317.0" prefWidth="614.0" styleClass="table-view">
         <columns>
-            <TableColumn fx:id="idColumn" text="ID" />
+            <TableColumn fx:id="idColumn" text="ID"/>
           <TableColumn fx:id="lastNameColumn" prefWidth="307.3999824523926" text="Last Name" />
           <TableColumn fx:id="firstNameColumn" minWidth="0.0" prefWidth="307.0000305175781" text="First Name" />
         </columns>
@@ -19,12 +38,12 @@
               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
           </columnResizePolicy>
       </TableView>
-      <AnchorPane prefHeight="124.0" prefWidth="614.0">
+      <AnchorPane prefHeight="0.0" prefWidth="614.0">
          <children>
-            <Button layoutX="84.0" layoutY="55.0" mnemonicParsing="false" onAction="#handleAddUser" text="Save" />
-            <Button layoutX="166.0" layoutY="54.0" mnemonicParsing="false" onAction="#handleUpdateUser" prefHeight="26.0" prefWidth="62.0" text="Update" />
-            <Button layoutX="271.0" layoutY="55.0" mnemonicParsing="false" onAction="#handleDeleteUser" text="Delete" />
-             <Button layoutX="458.0" layoutY="55.0" mnemonicParsing="false" onAction="#handleFriendshipsUser" text="Manage friendships" />
+            <Button layoutX="20.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleAddUser" prefHeight="26.0" prefWidth="96.0" styleClass="button" text="Save" />
+            <Button layoutX="138.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleUpdateUser" prefHeight="26.0" prefWidth="96.0" styleClass="button" text="Update" />
+            <Button layoutX="259.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleDeleteUser" prefHeight="26.0" prefWidth="96.0" styleClass="button" text="Delete" />
+             <Button layoutX="460.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleFriendshipsUser" styleClass="button" text="Manage friendships" />
          </children></AnchorPane>
    </children>
 </VBox>
