@@ -63,3 +63,30 @@
     -fx-border-width: 1 1 0 1;
 }
 
+.text-field {
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-font-size: 14;
+    -fx-background-color: #60A3D9;
+    -fx-padding: 8 10 8 10;
+    -fx-alignment: center;
+    -fx-highlight-fill: #9966cb;
+    -fx-highlight-text-fill: white;
+}
+
+.label {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-size: 14;
+    -fx-text-fill: #333333;
+}
+
+.text-area {
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 8 10 8 10;
+}
+
+.anchor-pane {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #B2DACD, #C7D0EE);
+}

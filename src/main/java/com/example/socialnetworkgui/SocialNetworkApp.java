@@ -58,7 +58,6 @@ public class SocialNetworkApp extends Application {
             UserController userController = fxmlLoader.getController();
             userController.setUserService(userService, friendshipService);
     }
-    //TODO: la delete daca n am selectat nimic, sa afiseze mesaj de warning
     public static void main(String[] args){
         launch(args);
     }

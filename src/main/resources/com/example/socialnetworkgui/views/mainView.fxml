@@ -30,7 +30,7 @@
       </AnchorPane>
       <TableView fx:id="tableView" prefHeight="317.0" prefWidth="614.0" styleClass="table-view">
         <columns>
-            <TableColumn fx:id="idColumn" text="ID"/>
+            <TableColumn fx:id="idColumn" text="ID" />
           <TableColumn fx:id="lastNameColumn" prefWidth="307.3999824523926" text="Last Name" />
           <TableColumn fx:id="firstNameColumn" minWidth="0.0" prefWidth="307.0000305175781" text="First Name" />
         </columns>
@@ -40,10 +40,29 @@
       </TableView>
       <AnchorPane prefHeight="0.0" prefWidth="614.0">
          <children>
-            <Button layoutX="20.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleAddUser" prefHeight="26.0" prefWidth="96.0" styleClass="button" text="Save" />
-            <Button layoutX="138.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleUpdateUser" prefHeight="26.0" prefWidth="96.0" styleClass="button" text="Update" />
-            <Button layoutX="259.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleDeleteUser" prefHeight="26.0" prefWidth="96.0" styleClass="button" text="Delete" />
-             <Button layoutX="460.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleFriendshipsUser" styleClass="button" text="Manage friendships" />
+            <Button layoutX="20.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleAddUser" prefHeight="36.0" prefWidth="82.0" styleClass="button" text="Save" />
+            <Button layoutX="138.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleUpdateUser" prefHeight="36.0" prefWidth="98.0" styleClass="button" text="Update" />
+            <Button layoutX="259.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleDeleteUser" prefHeight="36.0" prefWidth="89.0" styleClass="button" text="Delete" />
+             <Button layoutX="446.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleFriendshipsUser" prefHeight="36.0" prefWidth="179.0" styleClass="button" text="Manage friendships" />
+            <ImageView fitHeight="28.0" fitWidth="38.0" layoutX="68.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/plus.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="22.0" fitWidth="44.0" layoutX="205.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/change.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="322.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/minus2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="22.0" fitWidth="28.0" layoutX="596.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/friends.png" />
+               </image></ImageView>
          </children></AnchorPane>
    </children>
 </VBox>
