@@ -1,15 +1,14 @@
 package com.example.socialnetworkgui;
 
 import com.example.socialnetworkgui.controller.UserController;
+import com.example.socialnetworkgui.domain.Message;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.domain.validators.PrietenieValidator;
 import com.example.socialnetworkgui.domain.validators.UtilizatorValidator;
 import com.example.socialnetworkgui.domain.validators.Validator;
-import com.example.socialnetworkgui.repository.FriendshipDBRepository;
-import com.example.socialnetworkgui.repository.Repository;
-import com.example.socialnetworkgui.repository.UserDBRepository;
+import com.example.socialnetworkgui.repository.*;
 import com.example.socialnetworkgui.service.FriendshipService;
 import com.example.socialnetworkgui.service.UserService;
 import javafx.application.Application;
@@ -28,6 +27,7 @@ public class SocialNetworkApp extends Application {
     private FriendshipService friendshipService;
     private Validator<Prietenie> friendshipValidator;
     private Repository<Tuple<Long, Long>, Prietenie> friendshipRepo;
+    private MessageRepository messageRepo;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -37,7 +37,9 @@ public class SocialNetworkApp extends Application {
         friendshipValidator = new PrietenieValidator();
         friendshipRepo = new FriendshipDBRepository(friendshipValidator);
 
-        userService = new UserService(userRepo, friendshipRepo);
+        messageRepo = new MessageDBRepository();
+
+        userService = new UserService(userRepo, friendshipRepo, messageRepo);
         friendshipService = new FriendshipService(friendshipRepo);
 
         initView(primaryStage);

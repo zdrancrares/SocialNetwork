@@ -1,16 +1,20 @@
 package com.example.socialnetworkgui.service;
 
 import com.example.socialnetworkgui.DTO.FriendshipDTO;
+import com.example.socialnetworkgui.DTO.MessageDTO;
+import com.example.socialnetworkgui.domain.Message;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 import com.example.socialnetworkgui.exceptions.ServiceExceptions;
+import com.example.socialnetworkgui.repository.MessageRepository;
 import com.example.socialnetworkgui.repository.Repository;
 import com.example.socialnetworkgui.utils.observer.Observer;
 import com.example.socialnetworkgui.utils.observer.Observable;
 import com.example.socialnetworkgui.utils.events.UserChangeEvent;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -18,14 +22,16 @@ import java.util.function.Predicate;
 public class UserService implements Service<Long, Utilizator>, Observable<UserChangeEvent> {
     private final Repository<Long, Utilizator> userRepo;
     private final Repository<Tuple<Long,Long>, Prietenie> prietenieRepo;
+    private final MessageRepository messageRepo;
 
     private List<Observer<UserChangeEvent>> observers = new ArrayList<>();
 
     private static Long usersID;
-    public UserService(Repository<Long, Utilizator> userRepo, Repository<Tuple<Long, Long>, Prietenie> prietenieRepo){
+    public UserService(Repository<Long, Utilizator> userRepo, Repository<Tuple<Long, Long>, Prietenie> prietenieRepo, MessageRepository messageRepo){
         usersID = 0L;
         this.userRepo = userRepo;
         this.prietenieRepo = prietenieRepo;
+        this.messageRepo = messageRepo;
     }
 
     /**
@@ -320,5 +326,20 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
     @Override
     public void notifyObservers(UserChangeEvent t) {
         observers.stream().forEach(x->x.update(t));
+    }
+
+    public void addMessage(String content, Long fromId, ArrayList<Utilizator> to) throws RepositoryExceptions, ServiceExceptions{
+        Optional<Utilizator> user = userRepo.findOne(fromId);
+        if (user.isPresent()) {
+            Message message = new Message(user.get(), to,content, LocalDateTime.now());
+            messageRepo.save(message);
+        }
+        else{
+            throw new ServiceExceptions("Nu exista niciun utilizator cu acest id.");
+        }
+    }
+
+    public Iterable<MessageDTO> loadChats(Utilizator user1, Utilizator user2){
+        return messageRepo.loadUsersChats(user1.getId(), user2.getId());
     }
 }

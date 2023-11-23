@@ -21,10 +21,11 @@
       <Label layoutX="510.0" layoutY="117.0" text="First name:" />
       <Label layoutX="510.0" layoutY="163.0" text="Last name:" />
       <Label layoutX="539.0" layoutY="72.0" text="ID:" />
-      <Button onAction="#handleFilterFriendships" layoutX="477.0" layoutY="369.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Filter friendships" />
+      <Button layoutX="477.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleFilterFriendships" prefHeight="26.0" prefWidth="122.0" text="Filter friendships" />
       <Label layoutX="520.0" layoutY="211.0" text="Month:" />
       <TextField fx:id="monthTextField" layoutX="593.0" layoutY="207.0" />
-      <Button fx:id="reloadButton" onAction="#handleReload" layoutX="640.0" layoutY="370.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Reload friendships" />
+      <Button fx:id="reloadButton" layoutX="640.0" layoutY="370.0" mnemonicParsing="false" onAction="#handleReload" prefHeight="26.0" prefWidth="122.0" text="Reload friendships" />
+      <Button onAction="#handleChatsButton" layoutX="549.0" layoutY="264.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="150.0" text="Chats" />
       
    </children>
 </AnchorPane>

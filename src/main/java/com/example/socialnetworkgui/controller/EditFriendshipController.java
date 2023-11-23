@@ -15,14 +15,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -170,5 +177,46 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     public void handleReload(ActionEvent event){
         initModel(false);
         reloadButton.setStyle("-fx-background-color: #AFE1AF;");
+    }
+
+    @FXML
+    public void handleChatsButton(ActionEvent event) throws RepositoryExceptions{
+        if (Objects.equals(idTextField.getText(), "")){
+            MessageAlert.showErrorMessage(null, "Nu ati introdus niciun id.");
+            return;
+        }
+        Long id = Long.parseLong(idTextField.getText());
+
+        Optional<Utilizator> user2 = userService.getEntity(id);
+        if (user2.isPresent()) {
+            showChatWindow(user, user2.get());
+        }
+        else{
+            MessageAlert.showErrorMessage(null, "Nu exista utilizator cu acest id.");
+        }
+    }
+
+    public void showChatWindow(Utilizator utilizator1, Utilizator utilizator2){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("views/chats.fxml"));
+            AnchorPane root = loader.load();
+            Stage dialogStage = new Stage();
+
+            Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
+            dialogStage.getIcons().add(icon);
+            dialogStage.setTitle("Chats");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+
+            ChatController chatController = loader.getController();
+            chatController.setChatService(userService,friendshipService, dialogStage, utilizator1, utilizator2);
+
+            dialogStage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

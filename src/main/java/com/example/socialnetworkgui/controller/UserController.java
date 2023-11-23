@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -58,6 +59,7 @@ public class UserController implements Observer<UserChangeEvent> {
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<Utilizator, String>("lastName"));
         idColumn.setCellValueFactory(new PropertyValueFactory<Utilizator, Long>("id"));
         tableView.setItems(model);
+        //tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     public void initModel(){
         Iterable<Utilizator> users = userService.getAll();

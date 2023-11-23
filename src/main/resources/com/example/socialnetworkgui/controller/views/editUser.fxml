@@ -2,9 +2,10 @@
 
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane styleClass="anchor-pane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.EditUserController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="anchor-pane" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.EditUserController">
    <stylesheets>
       <URL value="@../css/styles.css" />
    </stylesheets>
@@ -15,8 +16,23 @@
       <Label layoutX="154.0" layoutY="80.0" prefHeight="18.0" prefWidth="15.0" styleClass="label" text="ID" />
       <Label layoutX="409.0" layoutY="191.0" styleClass="label" text="NUME" />
       <Label layoutX="134.0" layoutY="300.0" prefHeight="18.0" prefWidth="75.0" styleClass="label" text="PRENUME" />
-      <Button layoutX="21.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleSaveButton" styleClass="button" text="Save" />
-      <Button layoutX="106.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleClearButton" styleClass="button" text="Clear" />
-      <Button layoutX="500.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button" text="Cancel" />
+      <Button layoutX="21.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="36.0" prefWidth="75.0" styleClass="button" text="Save" />
+      <Button layoutX="126.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleClearButton" prefHeight="36.0" prefWidth="87.0" styleClass="button" text="Clear" />
+      <Button layoutX="490.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="36.0" prefWidth="96.0" styleClass="button" text="Cancel" />
+      <ImageView fitHeight="25.0" fitWidth="23.0" layoutX="180.0" layoutY="356.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../icons/clear.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="69.0" layoutY="358.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../icons/save.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="23.0" fitWidth="23.0" layoutX="555.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../icons/cancel.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

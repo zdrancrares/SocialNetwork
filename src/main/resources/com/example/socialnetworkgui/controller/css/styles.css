@@ -66,18 +66,20 @@
 .text-field {
     -fx-background-radius: 15;
     -fx-border-radius: 15;
-    -fx-font-size: 14;
-    -fx-background-color: #60A3D9;
+    -fx-font-size: 15;
+    -fx-background-color: #BBBBCC;
     -fx-padding: 8 10 8 10;
     -fx-alignment: center;
     -fx-highlight-fill: #9966cb;
     -fx-highlight-text-fill: white;
+    -fx-text-fill: #008080;
 }
 
 .label {
     -fx-font-family: "Arial", sans-serif;
     -fx-font-size: 14;
-    -fx-text-fill: #333333;
+    -fx-text-fill: linear-gradient(to bottom, #30d5c8, #00316e);
+
 }
 
 .text-area {
