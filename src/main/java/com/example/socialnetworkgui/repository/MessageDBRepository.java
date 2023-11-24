@@ -9,6 +9,7 @@ import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -83,7 +84,7 @@ public class MessageDBRepository implements MessageRepository {
 
     @Override
     public Iterable<MessageDTO> loadUsersChats(Long iduser1, Long iduser2) {
-        HashSet<MessageDTO> chats = new HashSet<>();
+        ArrayList<MessageDTO> chats = new ArrayList<>();
         String selectMessagesStatement = "SELECT\n" +
                 "    M.messageid,\n" +
                 "    M.content,\n" +
@@ -94,22 +95,18 @@ public class MessageDBRepository implements MessageRepository {
                 "    U2.last_name\n" +
                 "FROM\n" +
                 "    users U1\n" +
-                "    INNER JOIN\n" +
-                "    Messages M ON (M.fromid = ? OR M.fromid=?) AND M.fromid = U1.id\n" +
-                "    INNER JOIN\n" +
-                "    Destinations D ON M.messageid = D.messageid\n" +
-                "    INNER JOIN\n" +
-                "    users U2 ON (D.toid = ? Or D.toid=?) AND D.toid = U2.id\n" +
-                "\n" +
-                "ORDER BY M.date;";
+                "    INNER JOIN Messages M ON (M.fromid = ? OR M.fromid=?) AND M.fromid = U1.id\n" +
+                "    INNER JOIN Destinations D ON M.messageid = D.messageid\n" +
+                "    INNER JOIN users U2 ON (D.toid = ? Or D.toid=?) AND D.toid = U2.id\n" +
+                "ORDER BY M.date;\n";
         try(Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
                 DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
             PreparedStatement getChatsStatement = connection.prepareStatement(selectMessagesStatement);
         ){
             getChatsStatement.setLong(1, iduser1);
             getChatsStatement.setLong(2, iduser2);
-            getChatsStatement.setLong(3, iduser2);
-            getChatsStatement.setLong(4, iduser1);
+            getChatsStatement.setLong(3, iduser1);
+            getChatsStatement.setLong(4, iduser2);
             ResultSet chatsResultSet = getChatsStatement.executeQuery();
             while(chatsResultSet.next()){
                 String content = chatsResultSet.getString(2);

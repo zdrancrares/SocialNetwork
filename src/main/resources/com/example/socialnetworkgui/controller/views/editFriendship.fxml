@@ -13,19 +13,22 @@
             <TableColumn fx:id="friendsFromColumn" prefWidth="167.00003051757812" text="Friends From" />
         </columns>
       </TableView>
-       <TextField fx:id="idTextField" layoutX="593.0" layoutY="68.0" />
-      <TextField fx:id="firstNameTextField" layoutX="593.0" layoutY="113.0" />
-      <TextField fx:id="lastNameTextField" layoutX="593.0" layoutY="159.0" />
+       <TextField fx:id="idTextField" layoutX="593.0" layoutY="23.0" />
+      <TextField fx:id="firstNameTextField" layoutX="593.0" layoutY="68.0" />
+      <TextField fx:id="lastNameTextField" layoutX="593.0" layoutY="114.0" />
       <Button layoutX="640.0" layoutY="310.0" mnemonicParsing="false" onAction="#handleDeleteFriendship" prefHeight="26.0" prefWidth="122.0" text="Delete friendship" />
       <Button layoutX="478.0" layoutY="310.0" mnemonicParsing="false" onAction="#handleAddFriendship" text="Save new friendship" />
-      <Label layoutX="510.0" layoutY="117.0" text="First name:" />
-      <Label layoutX="510.0" layoutY="163.0" text="Last name:" />
-      <Label layoutX="539.0" layoutY="72.0" text="ID:" />
+      <Label layoutX="513.0" layoutY="72.0" text="First name:" />
+      <Label layoutX="511.0" layoutY="118.0" text="Last name:" />
+      <Label layoutX="542.0" layoutY="27.0" text="ID:" />
       <Button layoutX="477.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleFilterFriendships" prefHeight="26.0" prefWidth="122.0" text="Filter friendships" />
-      <Label layoutX="520.0" layoutY="211.0" text="Month:" />
-      <TextField fx:id="monthTextField" layoutX="593.0" layoutY="207.0" />
+      <Label layoutX="523.0" layoutY="166.0" text="Month:" />
+      <TextField fx:id="monthTextField" layoutX="593.0" layoutY="162.0" />
       <Button fx:id="reloadButton" layoutX="640.0" layoutY="370.0" mnemonicParsing="false" onAction="#handleReload" prefHeight="26.0" prefWidth="122.0" text="Reload friendships" />
-      <Button onAction="#handleChatsButton" layoutX="549.0" layoutY="264.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="150.0" text="Chats" />
+      <Button layoutX="640.0" layoutY="250.0" mnemonicParsing="false" onAction="#handleChatsButton" prefHeight="26.0" prefWidth="122.0" text="Chats" />
+      <Button onAction="#handleSendMessage" layoutX="477.0" layoutY="251.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Send message" />
+      <Label layoutX="513.0" layoutY="211.0" prefHeight="18.0" prefWidth="58.0" text="Message:" />
+      <TextField fx:id="messageTextField" layoutX="593.0" layoutY="207.0" />
       
    </children>
 </AnchorPane>

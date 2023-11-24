@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class EditFriendshipController implements Observer<UserChangeEvent> {
@@ -52,6 +53,8 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     TextField idTextField;
     @FXML
     TextField monthTextField;
+    @FXML
+    TextField messageTextField;
     @FXML
     Button reloadButton;
 
@@ -94,6 +97,7 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
         tableView.setItems(model);
     }
     public void initModel(boolean filter) {
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         if (filter){
             int month = 0;
             try {
@@ -193,6 +197,29 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
         }
         else{
             MessageAlert.showErrorMessage(null, "Nu exista utilizator cu acest id.");
+        }
+    }
+
+    @FXML
+    public void handleSendMessage(ActionEvent actionEvent) throws RepositoryExceptions, ServiceExceptions{
+        ObservableList<FriendshipDTO> friends = tableView.getSelectionModel().getSelectedItems();
+        if (!friends.isEmpty()){
+            if (Objects.equals(messageTextField.getText(), "")){
+                MessageAlert.showErrorMessage(null, "Nu ati introdus niciun mesaj.");
+                return;
+            }
+            ArrayList<Utilizator> to = new ArrayList<>();
+            for (FriendshipDTO friend: friends){
+                Utilizator user = new Utilizator(friend.getFirstName(), friend.getLastName());
+                user.setId(friend.getId());
+                to.add(user);
+            }
+            userService.addMessage(messageTextField.getText(), user.getId(), to);
+            MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Send message details", "Mesajul a fost trimis cu succes.");
+            messageTextField.setText("");
+        }
+        else{
+            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator la care sa trimiteti.");
         }
     }
 

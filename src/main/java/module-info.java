@@ -17,6 +17,9 @@ module com.example.socialnetworkgui {
     opens com.example.socialnetworkgui.domain to javafx.base;
     exports com.example.socialnetworkgui.domain;
 
+    opens com.example.socialnetworkgui.exceptions;
+    exports com.example.socialnetworkgui.exceptions;
+
     opens com.example.socialnetworkgui.DTO to javafx.base;
     exports com.example.socialnetworkgui.DTO;
 
