@@ -1,5 +1,6 @@
 package com.example.socialnetworkgui.controller;
 
+import com.example.socialnetworkgui.DTO.FriendRequestDTO;
 import com.example.socialnetworkgui.DTO.FriendshipDTO;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
@@ -11,6 +12,7 @@ import com.example.socialnetworkgui.service.UserService;
 import com.example.socialnetworkgui.utils.events.UserChangeEvent;
 import com.example.socialnetworkgui.utils.observer.Observable;
 import com.example.socialnetworkgui.utils.observer.Observer;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,6 +40,8 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     @FXML
     TableView<FriendshipDTO> tableView;
     @FXML
+    TableView<FriendRequestDTO> tableViewFriendRequests;
+    @FXML
     TableColumn<FriendshipDTO, Long> friendIdColumn;
     @FXML
     TableColumn<FriendshipDTO, String> firstNameColumn;
@@ -57,8 +61,18 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     TextField messageTextField;
     @FXML
     Button reloadButton;
+    @FXML
+    TableColumn<FriendRequestDTO, Long> friendIdColumnFriendRequest;
+    @FXML
+    TableColumn<FriendRequestDTO, String> friendFirstNameColumnFriendRequest;
+    @FXML
+    TableColumn<FriendRequestDTO, String> friendLastNameColumnFriendRequest;
+    @FXML
+    TableColumn<FriendRequestDTO, String> friendStatusColumnFriendRequest;
 
     ObservableList<FriendshipDTO> model = FXCollections.observableArrayList();
+
+    ObservableList<FriendRequestDTO> modelFriendRequests = FXCollections.observableArrayList();
 
     Stage dialogStage;
     Utilizator user;
@@ -76,6 +90,7 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
         friendshipService.addObserver(this);
 
         initModel(false);
+        initModelFriendRequest();
 
         firstNameTextField.setEditable(false);
         lastNameTextField.setEditable(false);
@@ -88,6 +103,13 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
         });
     }
 
+    public void initModelFriendRequest(){
+        Iterable<FriendRequestDTO> friendRequests = userService.getAllFriendRequests(user.getId());
+        System.out.println(friendRequests);
+        List<FriendRequestDTO> friendRequestsList = StreamSupport.stream(friendRequests.spliterator(), false).toList();
+        modelFriendRequests.setAll(friendRequestsList);
+    }
+
     @FXML
     public void initialize(){
         friendIdColumn.setCellValueFactory(new PropertyValueFactory<FriendshipDTO, Long>("id"));
@@ -95,6 +117,14 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<FriendshipDTO, String>("lastName"));
         friendsFromColumn.setCellValueFactory(new PropertyValueFactory<FriendshipDTO, LocalDateTime>("friendsFrom"));
         tableView.setItems(model);
+
+
+        friendIdColumnFriendRequest.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId().getLeft()));
+        //friendIdColumnFriendRequest.setCellValueFactory(new PropertyValueFactory<FriendRequestDTO, Long>("id"));
+        friendFirstNameColumnFriendRequest.setCellValueFactory(new PropertyValueFactory<FriendRequestDTO, String>("firstName"));
+        friendLastNameColumnFriendRequest.setCellValueFactory(new PropertyValueFactory<FriendRequestDTO, String>("lastName"));
+        friendStatusColumnFriendRequest.setCellValueFactory(new PropertyValueFactory<FriendRequestDTO, String>("status"));
+        tableViewFriendRequests.setItems(modelFriendRequests);
     }
     public void initModel(boolean filter) {
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -132,6 +162,7 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     @Override
     public void update(UserChangeEvent userChangeEvent){
         initModel(false);
+        initModelFriendRequest();
     }
 
     @FXML

@@ -6,6 +6,7 @@ import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 import com.example.socialnetworkgui.exceptions.ServiceExceptions;
+import com.example.socialnetworkgui.repository.FriendRequestRepository;
 import com.example.socialnetworkgui.repository.Repository;
 import com.example.socialnetworkgui.utils.events.UserChangeEvent;
 import com.example.socialnetworkgui.utils.observer.Observable;
@@ -13,14 +14,17 @@ import com.example.socialnetworkgui.utils.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
 public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>, Observable<UserChangeEvent> {
-    private Repository<Tuple<Long, Long>, Prietenie> friendshipRepo;
+    private final Repository<Tuple<Long, Long>, Prietenie> friendshipRepo;
+    private final FriendRequestRepository friendRequestRepo;
     private List<Observer<UserChangeEvent>> observers = new ArrayList<>();
-    public FriendshipService(Repository<Tuple<Long,Long>, Prietenie> friendshipRepo){
+    public FriendshipService(Repository<Tuple<Long,Long>, Prietenie> friendshipRepo, FriendRequestRepository friendRequestRepo){
         this.friendshipRepo = friendshipRepo;
+        this.friendRequestRepo = friendRequestRepo;
     }
 
     /**
@@ -36,8 +40,14 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>, 
      *            if the friendship is not valid
      *
      */
-
     public boolean addEntity(Utilizator user1, Utilizator user2) throws ServiceExceptions, RepositoryExceptions{
+        boolean result1 = friendRequestRepo.findFriendRequest(user1.getId(), user2.getId());
+        boolean result2 = friendRequestRepo.findFriendRequest(user2.getId(), user1.getId());
+
+        if (!result1 && !result2){
+            throw new ServiceExceptions("Nu exista nicio cerere de prietenie intre acest utilizatori.");
+        }
+
         Prietenie entity;
         Tuple<Long, Long> prietenieID;
         if (user1.getId() < user2.getId()) {
@@ -53,13 +63,31 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>, 
         if (friendship.isPresent()){
             throw new ServiceExceptions("Prietenia exista deja");
         }
-        Optional<Prietenie> p = friendshipRepo.save(entity);
-        if (p.isEmpty()){
-            notifyObservers(new UserChangeEvent(null, null));
-            return true;
+
+        String status;
+        if (result1){
+            status = friendRequestRepo.findStatus(user1.getId(), user2.getId());
+        }
+        else{
+            status = friendRequestRepo.findStatus(user2.getId(), user1.getId());
+        }
+
+        if (Objects.equals(status, "pending")) {
+            Optional<Prietenie> p = friendshipRepo.save(entity);
+            if (p.isEmpty()) {
+                notifyObservers(new UserChangeEvent(null, null));
+                if (result1){
+                    friendRequestRepo.updateStatus(user1.getId(), user2.getId(), "accepted");
+                    notifyObservers(new UserChangeEvent(null, null));
+                }
+                else{
+                    friendRequestRepo.updateStatus(user2.getId(), user1.getId(), "accepted");
+                    notifyObservers(new UserChangeEvent(null, null));
+                }
+                return true;
+            }
         }
         throw new ServiceExceptions("Nu exista acest ID.");
-        //return false;
     }
 
     @Override

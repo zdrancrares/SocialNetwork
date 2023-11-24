@@ -1,5 +1,6 @@
 package com.example.socialnetworkgui.service;
 
+import com.example.socialnetworkgui.DTO.FriendRequestDTO;
 import com.example.socialnetworkgui.DTO.FriendshipDTO;
 import com.example.socialnetworkgui.DTO.MessageDTO;
 import com.example.socialnetworkgui.domain.Message;
@@ -8,6 +9,7 @@ import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 import com.example.socialnetworkgui.exceptions.ServiceExceptions;
+import com.example.socialnetworkgui.repository.FriendRequestRepository;
 import com.example.socialnetworkgui.repository.MessageRepository;
 import com.example.socialnetworkgui.repository.Repository;
 import com.example.socialnetworkgui.utils.observer.Observer;
@@ -23,15 +25,17 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
     private final Repository<Long, Utilizator> userRepo;
     private final Repository<Tuple<Long,Long>, Prietenie> prietenieRepo;
     private final MessageRepository messageRepo;
+    private final FriendRequestRepository friendRequestRepo;
 
     private List<Observer<UserChangeEvent>> observers = new ArrayList<>();
 
     private static Long usersID;
-    public UserService(Repository<Long, Utilizator> userRepo, Repository<Tuple<Long, Long>, Prietenie> prietenieRepo, MessageRepository messageRepo){
+    public UserService(Repository<Long, Utilizator> userRepo, Repository<Tuple<Long, Long>, Prietenie> prietenieRepo, MessageRepository messageRepo, FriendRequestRepository friendRequestRepo){
         usersID = 0L;
         this.userRepo = userRepo;
         this.prietenieRepo = prietenieRepo;
         this.messageRepo = messageRepo;
+        this.friendRequestRepo = friendRequestRepo;
     }
 
     /**
@@ -342,4 +346,47 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
     public Iterable<MessageDTO> loadChats(Utilizator user1, Utilizator user2){
         return messageRepo.loadUsersChats(user1.getId(), user2.getId());
     }
+
+    public Iterable<FriendRequestDTO> getAllFriendRequests(Long toId){
+        return friendRequestRepo.loadAllRequests(toId);
+    }
+
+    public void sendFriendRequest(Long idFrom, Long idTo) throws RepositoryExceptions{
+        Tuple<Long, Long> id = new Tuple<>(idFrom, idTo);
+        friendRequestRepo.createFriendRequest(id);
+        notifyObservers(new UserChangeEvent(null, null));
+    }
+
+    public boolean rejectFriendRequest(Utilizator user1, Utilizator user2) throws ServiceExceptions, RepositoryExceptions{
+        boolean result1 = friendRequestRepo.findFriendRequest(user1.getId(), user2.getId());
+        boolean result2 = friendRequestRepo.findFriendRequest(user2.getId(), user1.getId());
+
+        if (!result1 && !result2){
+            throw new ServiceExceptions("Nu exista nicio cerere de prietenie intre acest utilizatori.");
+        }
+
+        if (result1){
+            String status = friendRequestRepo.findStatus(user1.getId(), user2.getId());
+            if (Objects.equals(status, "pending")){
+                friendRequestRepo.updateStatus(user1.getId(), user2.getId(), "rejected");
+                notifyObservers(new UserChangeEvent(null, null));
+                return true;
+            }
+            else{
+                throw new ServiceExceptions("Cererea a primit deja un raspuns.");
+            }
+        }
+        else{
+            String status = friendRequestRepo.findStatus(user2.getId(), user1.getId());
+            if (Objects.equals(status, "pending")){
+                friendRequestRepo.updateStatus(user2.getId(), user1.getId(), "rejected");
+                notifyObservers(new UserChangeEvent(null, null));
+                return true;
+            }
+            else{
+                throw new ServiceExceptions("Cererea a primit deja un raspuns.");
+            }
+        }
+    }
+
 }

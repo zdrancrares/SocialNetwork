@@ -28,6 +28,7 @@ public class SocialNetworkApp extends Application {
     private Validator<Prietenie> friendshipValidator;
     private Repository<Tuple<Long, Long>, Prietenie> friendshipRepo;
     private MessageRepository messageRepo;
+    private FriendRequestRepository friendRequestRepo;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -38,9 +39,10 @@ public class SocialNetworkApp extends Application {
         friendshipRepo = new FriendshipDBRepository(friendshipValidator);
 
         messageRepo = new MessageDBRepository();
+        friendRequestRepo = new FriendRequestDBRepository();
 
-        userService = new UserService(userRepo, friendshipRepo, messageRepo);
-        friendshipService = new FriendshipService(friendshipRepo);
+        userService = new UserService(userRepo, friendshipRepo, messageRepo, friendRequestRepo);
+        friendshipService = new FriendshipService(friendshipRepo, friendRequestRepo);
 
         initView(primaryStage);
         primaryStage.setTitle("SocialNetworkApp");

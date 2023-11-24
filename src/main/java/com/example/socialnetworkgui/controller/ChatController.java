@@ -55,28 +55,7 @@ public class ChatController {
         main = new VBox(20);
         main.setPadding(new Insets(10));
         initChat();
-        /*
-        chatContainer = new VBox(10);
-        chatContainer.setPadding(new Insets(10));
-        Iterable<MessageDTO>chats = userService.loadChats(user1, user2);
-        for (MessageDTO chat : chats) {
-            VBox messageBox;
-            if (Objects.equals(chat.getFirstName1(), user1.getFirstName())) {
-                messageBox = createMessageBox(chat, user1);
-            }
-            else{
-                messageBox = createMessageBox(chat, user2);
-            }
-            chatContainer.getChildren().add(messageBox);
-        }
-        System.out.println(chats);
-        ScrollPane scrollPane = new ScrollPane(chatContainer);
-        Scene scene = new Scene(scrollPane, 400, 300);
-        stage.setScene(scene);
-        stage.setTitle("Chats");
-        stage.show();
 
-         */
         Scene scene = new Scene(main, 500, 450);
         dialogStage.setScene(scene);
         dialogStage.setTitle("Chats");
@@ -97,7 +76,6 @@ public class ChatController {
             }
             chatContainer.getChildren().add(messageBox);
         }
-        //System.out.println(chats);
         scrollPane = new ScrollPane(chatContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.setMinHeight(350);
@@ -133,7 +111,7 @@ public class ChatController {
         TextField messageField = new TextField(chat.getContent());
 
         Button replyButton = new Button("Reply");
-        replyButton.setStyle("-fx-background-color: #90EE90;");
+        replyButton.setStyle("-fx-background-color: #77c3ec;");
 
         replyButton.setOnAction(event -> {
             try {
