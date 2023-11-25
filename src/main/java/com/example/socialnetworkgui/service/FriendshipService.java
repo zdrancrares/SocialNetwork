@@ -1,6 +1,7 @@
 package com.example.socialnetworkgui.service;
 
 import com.example.socialnetworkgui.DTO.FriendshipDTO;
+import com.example.socialnetworkgui.domain.FriendRequest;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
@@ -117,10 +118,17 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>, 
         Tuple<Long, Long> newID = new Tuple<>(id1, id2);
         Optional<Prietenie> friendship = friendshipRepo.delete(newID);
         if (friendship.isPresent()){
+            friendRequestRepo.delete(newID);
+            Tuple<Long, Long> newID2 = new Tuple<>(id2, id1);
+            friendRequestRepo.delete(newID2);
             notifyObservers(new UserChangeEvent(null, null));
             return friendship.get();
         }
         throw new ServiceExceptions("Nu exista aceasta prietenie!");
+    }
+
+    public boolean findFriendRequest(Long idFrom, Long idTo){
+        return friendRequestRepo.findFriendRequest(idFrom, idTo);
     }
 
     @Override

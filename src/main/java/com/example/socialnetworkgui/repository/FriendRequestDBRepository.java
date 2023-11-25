@@ -30,7 +30,21 @@ public class FriendRequestDBRepository implements FriendRequestRepository{
     }
 
     @Override
-    public Optional<FriendRequestDTO> delete(Tuple<Long, Long> longLongTuple) throws RepositoryExceptions {
+    public Optional<FriendRequestDTO> delete(Tuple<Long, Long> id) throws RepositoryExceptions {
+        String deleteSQL = "DELETE FROM friendrequests WHERE fromId=? and toid=? and status='accepted'";
+        try(Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
+                DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteSQL);
+        ){
+            deleteStatement.setLong(1, id.getLeft());
+            deleteStatement.setLong(2, id.getRight());
+            if (deleteStatement.executeUpdate() > 0){
+                return Optional.empty();
+            }
+            return Optional.of(new FriendRequestDTO());
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
         return Optional.empty();
     }
 

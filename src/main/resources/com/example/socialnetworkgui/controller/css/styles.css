@@ -13,10 +13,13 @@
     -fx-font-weight: bold;
 }
 
+.button-centered-text {
+    -fx-alignment: center;
+}
+
 .button:hover {
     -fx-background-color: #5D00FF;
 }
-
 
 .table-view {
     -fx-control-inner-background: #c0afe2;

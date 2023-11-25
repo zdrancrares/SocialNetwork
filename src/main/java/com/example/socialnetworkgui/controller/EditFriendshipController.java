@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -259,6 +260,12 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     public void handleSendFriendRequest(ActionEvent actionEvent){
         Long fromId = user.getId();
         Long toId = Long.parseLong(idTextField.getText());
+
+        if (friendshipService.findFriendRequest(fromId, toId) || friendshipService.findFriendRequest(toId, fromId)){
+            MessageAlert.showErrorMessage(null, "Exista deja o cerere de prietenie intre acesti utilizatori");
+            return;
+        }
+
         try {
             userService.sendFriendRequest(fromId, toId);
             MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Send friend request details", "Cererea a fost trimisa cu succes.");
@@ -270,6 +277,10 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     @FXML
     public void handleAcceptFriendRequest(ActionEvent actionEvent){
         FriendRequestDTO friendToAccept = tableViewFriendRequests.getSelectionModel().getSelectedItem();
+        if (friendToAccept == null){
+            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator");
+            return;
+        }
         try{
             Utilizator user2 = new Utilizator(friendToAccept.getFirstName(), friendToAccept.getLastName());
             user2.setId(friendToAccept.getId().getLeft());
@@ -283,6 +294,10 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
     @FXML
     public void handleRejectFriendRequest(ActionEvent actionEvent){
         FriendRequestDTO friendToReject = tableViewFriendRequests.getSelectionModel().getSelectedItem();
+        if (friendToReject == null){
+            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator");
+            return;
+        }
         try{
             Utilizator user2 = new Utilizator(friendToReject.getFirstName(), friendToReject.getLastName());
             user2.setId(friendToReject.getId().getLeft());
