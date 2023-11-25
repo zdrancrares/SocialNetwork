@@ -105,7 +105,7 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
 
     public void initModelFriendRequest(){
         Iterable<FriendRequestDTO> friendRequests = userService.getAllFriendRequests(user.getId());
-        System.out.println(friendRequests);
+        //System.out.println(friendRequests);
         List<FriendRequestDTO> friendRequestsList = StreamSupport.stream(friendRequests.spliterator(), false).toList();
         modelFriendRequests.setAll(friendRequestsList);
     }
@@ -216,15 +216,16 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
 
     @FXML
     public void handleChatsButton(ActionEvent event) throws RepositoryExceptions{
-        if (Objects.equals(idTextField.getText(), "")){
-            MessageAlert.showErrorMessage(null, "Nu ati introdus niciun id.");
+        FriendshipDTO friend = tableView.getSelectionModel().getSelectedItem();
+
+        if (friend == null){
+            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun prieten.");
             return;
         }
-        Long id = Long.parseLong(idTextField.getText());
 
-        Optional<Utilizator> user2 = userService.getEntity(id);
-        if (user2.isPresent()) {
-            showChatWindow(user, user2.get());
+        Optional<Utilizator> utilizator2 = userService.getEntity(friend.getId());
+        if (utilizator2.isPresent()) {
+            showChatWindow(user, utilizator2.get());
         }
         else{
             MessageAlert.showErrorMessage(null, "Nu exista utilizator cu acest id.");
@@ -251,6 +252,44 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
         }
         else{
             MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator la care sa trimiteti.");
+        }
+    }
+
+    @FXML
+    public void handleSendFriendRequest(ActionEvent actionEvent){
+        Long fromId = user.getId();
+        Long toId = Long.parseLong(idTextField.getText());
+        try {
+            userService.sendFriendRequest(fromId, toId);
+            MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Send friend request details", "Cererea a fost trimisa cu succes.");
+        }catch(Exception e){
+            MessageAlert.showErrorMessage(null, e.getMessage());
+        }
+    }
+
+    @FXML
+    public void handleAcceptFriendRequest(ActionEvent actionEvent){
+        FriendRequestDTO friendToAccept = tableViewFriendRequests.getSelectionModel().getSelectedItem();
+        try{
+            Utilizator user2 = new Utilizator(friendToAccept.getFirstName(), friendToAccept.getLastName());
+            user2.setId(friendToAccept.getId().getLeft());
+            friendshipService.addEntity(user, user2);
+            MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Friend request details", "Cererea a fost acceptata.");
+        }catch(Exception e){
+            MessageAlert.showErrorMessage(null, e.getMessage());
+        }
+    }
+
+    @FXML
+    public void handleRejectFriendRequest(ActionEvent actionEvent){
+        FriendRequestDTO friendToReject = tableViewFriendRequests.getSelectionModel().getSelectedItem();
+        try{
+            Utilizator user2 = new Utilizator(friendToReject.getFirstName(), friendToReject.getLastName());
+            user2.setId(friendToReject.getId().getLeft());
+            userService.rejectFriendRequest(user, user2);
+            MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Friend request details", "Cererea a fost respinsa.");
+        }catch(Exception e){
+            MessageAlert.showErrorMessage(null, e.getMessage());
         }
     }
 

@@ -109,6 +109,8 @@ public class MessageDBRepository implements MessageRepository {
             getChatsStatement.setLong(4, iduser2);
             ResultSet chatsResultSet = getChatsStatement.executeQuery();
             while(chatsResultSet.next()){
+                Long id = chatsResultSet.getLong(1);
+
                 String content = chatsResultSet.getString(2);
                 LocalDateTime date = chatsResultSet.getTimestamp(3).toLocalDateTime();
 
@@ -119,11 +121,58 @@ public class MessageDBRepository implements MessageRepository {
                 String lastName2 = chatsResultSet.getString(7);
 
                 MessageDTO chat = new MessageDTO(content, date, firstName1, lastName1, firstName2, lastName2);
+                chat.setId(id);
                 chats.add(chat);
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
         return chats;
+    }
+
+    @Override
+    public void reply(Message message, Long userMessageId) {
+        String insertSqlStatement = "insert into messages(content, fromid, date) values(?,?,?)";
+        Optional<Message> result = Optional.empty();
+        try(Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
+                DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
+            PreparedStatement insertMessageStatement = connection.prepareStatement(insertSqlStatement, Statement.RETURN_GENERATED_KEYS);
+        ){
+            insertMessageStatement.setString(1, message.getContent());
+            insertMessageStatement.setLong(2, message.getFrom().getId());
+            insertMessageStatement.setTimestamp(3, Timestamp.valueOf(message.getDate()));
+            if (insertMessageStatement.executeUpdate() > 0){
+                ResultSet resultSet = insertMessageStatement.getGeneratedKeys();
+                resultSet.next();
+                Long id = resultSet.getLong("messageid");
+                message.setId(id);
+
+                //am creat mesajul, acum trebuie sa cream destination
+
+                String insertSqlStatement2 = "insert into destinations(messageid, toid) values(?,?)";
+                try(PreparedStatement insertStatement2 = connection.prepareStatement(insertSqlStatement2, Statement.RETURN_GENERATED_KEYS);
+                ){
+                    insertStatement2.setLong(1, message.getId());
+                    insertStatement2.setLong(2, message.getTo().get(0).getId());
+                    insertStatement2.executeUpdate();
+
+                    //acum cream reply
+
+                    String insertSqlStatement3 = "insert into replies(messageid1, messageid2) values (?, ?);";
+                    try(PreparedStatement insertStatement3 = connection.prepareStatement(insertSqlStatement3, Statement.RETURN_GENERATED_KEYS);
+                    ){
+                        insertStatement3.setLong(1, userMessageId);
+                        insertStatement3.setLong(2, message.getId());
+                        insertStatement3.executeUpdate();
+                    }catch(SQLException e){
+                        System.out.println(e.getMessage());
+                    }
+                }catch (SQLException e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

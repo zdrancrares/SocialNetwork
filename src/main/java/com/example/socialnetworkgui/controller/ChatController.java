@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -87,15 +88,13 @@ public class ChatController {
 
     }
 
-    public void handleSendReply(ActionEvent actionEvent) throws RepositoryExceptions, ServiceExceptions {
+    public void handleSendReply(ActionEvent actionEvent, MessageDTO chat) throws RepositoryExceptions, ServiceExceptions {
         if (Objects.equals(sendReply.getText(), "")) {
-            MessageAlert.showErrorMessage(null, "Nu ati introdus niciun mesaj.");
+            MessageAlert.showErrorMessage(null, "Textul este vid.");
             return;
         }
-        ArrayList<Utilizator> to = new ArrayList<>();
-        to.add(user2);
-        userService.addMessage(sendReply.getText(), user1.getId(), to);
-        MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Send message details", "Mesajul a fost trimis cu succes.");
+        userService.addReply(chat, user1, user2, "(replied to: " + chat.getContent() + ")\n" + sendReply.getText());
+        MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Send message details", "Raspunsul a fost trimis cu succes.");
         sendReply.setText("");
         initChat();
     }
@@ -103,26 +102,30 @@ public class ChatController {
     private VBox createMessageBox(MessageDTO chat, Utilizator user){
         HBox messageBox = new HBox(10);
 
-        Label dateLabel = new Label(chat.getDate().toString());
+        //Label dateLabel = new Label(chat.getDate().toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        Label dateLabel = new Label(chat.getDate().format(formatter));
 
         Label userNameLabel = new Label(user.getFirstName() + " " + user.getLastName());
         userNameLabel.setStyle("-fx-font-weight: bold;");
 
-        TextField messageField = new TextField(chat.getContent());
+        TextArea messageField = new TextArea(chat.getContent());
+        messageField.setWrapText(true);
+        messageField.setPrefSize(200, 60);
 
         Button replyButton = new Button("Reply");
         replyButton.setStyle("-fx-background-color: #77c3ec;");
 
         replyButton.setOnAction(event -> {
             try {
-                handleSendReply(new ActionEvent());
+                handleSendReply(new ActionEvent(), chat);
             }catch (Exception e){
                 MessageAlert.showErrorMessage(null, e.getMessage());
             }
         });
 
         messageField.setEditable(false);
-        messageField.setMinWidth(200);
+        //messageField.setMinWidth(200);
 
         VBox chatBox = new VBox(5);
 

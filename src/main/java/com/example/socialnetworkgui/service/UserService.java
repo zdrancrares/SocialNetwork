@@ -373,6 +373,8 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
                 return true;
             }
             else{
+                friendRequestRepo.updateStatus(user1.getId(),user2.getId(), status);
+                notifyObservers(new UserChangeEvent(null, null));
                 throw new ServiceExceptions("Cererea a primit deja un raspuns.");
             }
         }
@@ -384,9 +386,18 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
                 return true;
             }
             else{
+                friendRequestRepo.updateStatus(user2.getId(),user1.getId(), status);
+                notifyObservers(new UserChangeEvent(null, null));
                 throw new ServiceExceptions("Cererea a primit deja un raspuns.");
             }
         }
+    }
+
+    public void addReply(MessageDTO chat, Utilizator user1, Utilizator user2, String content){
+        ArrayList<Utilizator> to = new ArrayList<>();
+        to.add(user2);
+        Message message = new Message(user1, to, content, LocalDateTime.now());
+        messageRepo.reply(message, chat.getId());
     }
 
 }

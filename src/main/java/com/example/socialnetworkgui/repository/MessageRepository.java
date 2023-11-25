@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface MessageRepository extends Repository<Long, Message>{
     Iterable<MessageDTO> loadUsersChats(Long iduser1, Long iduser2);
+    void reply(Message message, Long userMessageId);
 }

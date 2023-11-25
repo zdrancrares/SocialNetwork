@@ -37,9 +37,9 @@
             <TableColumn fx:id="friendStatusColumnFriendRequest" prefWidth="130.20001220703125" text="Status" />
         </columns>
       </TableView>
-      <Button layoutX="495.0" layoutY="347.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Reject" />
-      <Button layoutX="650.0" layoutY="347.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Accept" />
-      <Button layoutX="571.0" layoutY="292.0" mnemonicParsing="false" text="Send friend request" />
+      <Button onAction="#handleRejectFriendRequest" layoutX="495.0" layoutY="347.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Reject" />
+      <Button onAction="#handleAcceptFriendRequest" layoutX="650.0" layoutY="347.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Accept" />
+      <Button onAction="#handleSendFriendRequest" layoutX="571.0" layoutY="292.0" mnemonicParsing="false" text="Send friend request" />
       
    </children>
 </AnchorPane>

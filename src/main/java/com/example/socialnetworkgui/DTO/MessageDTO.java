@@ -3,6 +3,7 @@ package com.example.socialnetworkgui.DTO;
 import java.time.LocalDateTime;
 
 public class MessageDTO {
+    private Long id;
     private String content;
     private LocalDateTime date;
     private String firstName1;
@@ -65,6 +66,15 @@ public class MessageDTO {
     public void setLastName2(String lastName2) {
         this.lastName2 = lastName2;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString(){
         return this.getDate() + " | " + this.getContent() + " | " + this.getFirstName1() + " " + this.getLastName1() + " | " + this.getFirstName2() + " " + this.getLastName2();

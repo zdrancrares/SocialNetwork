@@ -86,8 +86,21 @@ public class FriendshipService implements Service<Tuple<Long,Long>, Prietenie>, 
                 }
                 return true;
             }
+            else{
+                throw new ServiceExceptions("Eroare la salvarea prieteniei.");
+            }
         }
-        throw new ServiceExceptions("Nu exista acest ID.");
+        else{
+            if (result1) {
+                friendRequestRepo.updateStatus(user1.getId(), user2.getId(), status);
+                notifyObservers(new UserChangeEvent(null, null));
+            }
+            else{
+                friendRequestRepo.updateStatus(user2.getId(), user1.getId(), status);
+                notifyObservers(new UserChangeEvent(null, null));
+            }
+            throw new ServiceExceptions("Cererea a primit deja un raspuns");
+        }
     }
 
     @Override
