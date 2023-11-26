@@ -19,6 +19,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -58,6 +60,10 @@ public class ChatController {
         initChat();
 
         Scene scene = new Scene(main, 500, 450);
+
+        URL cssFile = getClass().getClassLoader().getResource("com/example/socialnetworkgui/controller/css/styles.css");
+        scene.getStylesheets().add(cssFile.toExternalForm());
+
         dialogStage.setScene(scene);
         dialogStage.setTitle("Chats");
         dialogStage.show();
@@ -112,6 +118,8 @@ public class ChatController {
         TextArea messageField = new TextArea(chat.getContent());
         messageField.setWrapText(true);
         messageField.setPrefSize(200, 60);
+
+        messageField.getStyleClass().add("text-area");
 
         Button replyButton = new Button("Reply");
         replyButton.setStyle("-fx-background-color: #77c3ec;");

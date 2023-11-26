@@ -95,3 +95,51 @@
 .anchor-pane {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #B2DACD, #C7D0EE);
 }
+
+
+/* Set the background color */
+.text-area {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Set the text color */
+.text-area .text {
+    -fx-fill: #333333;
+}
+
+/* Add a border */
+.text-area {
+    -fx-border-color: #4286f4;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}
+
+/* Change the font style */
+.text-area {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+}
+
+/* Add some padding */
+.text-area {
+    -fx-padding: 5px;
+}
+
+/* Set a different caret color */
+.text-area .caret {
+    -fx-caret-color: #ff6600;
+}
+
+/* Customize the scrollbar */
+.text-area .scroll-pane .scroll-bar:vertical {
+    -fx-background-color: #f0f0f0;
+    -fx-background-insets: 0, 0, 1;
+    -fx-padding: 0.25em;
+}
+
+.text-area .scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: #f0f0f0;
+    -fx-background-insets: 0, 0, 1;
+    -fx-padding: 0.25em;
+}
+

@@ -64,7 +64,7 @@ public class UserController implements Observer<UserChangeEvent> {
     public void initModel(){
         Iterable<Utilizator> users = userService.getAll();
         List<Utilizator> userList = StreamSupport.stream(users.spliterator(), false).toList();
-        System.out.println(userList);
+        //System.out.println(userList);
         model.setAll(userList);
     }
 
@@ -150,7 +150,7 @@ public class UserController implements Observer<UserChangeEvent> {
             Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
             dialogStage.getIcons().add(icon);
 
-            dialogStage.setTitle("Edit the user's friendships");
+            dialogStage.setTitle("Edit the user's friendships(" + user.getFirstName() + " " + user.getLastName() + ")");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             Scene scene = new Scene(root);
             dialogStage.setScene(scene);
