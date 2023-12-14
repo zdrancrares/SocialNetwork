@@ -12,17 +12,21 @@ import com.example.socialnetworkgui.exceptions.ServiceExceptions;
 import com.example.socialnetworkgui.repository.FriendRequestRepository;
 import com.example.socialnetworkgui.repository.MessageRepository;
 import com.example.socialnetworkgui.repository.Repository;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PagingRepository;
 import com.example.socialnetworkgui.utils.observer.Observer;
 import com.example.socialnetworkgui.utils.observer.Observable;
 import com.example.socialnetworkgui.utils.events.UserChangeEvent;
 
+import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 public class UserService implements Service<Long, Utilizator>, Observable<UserChangeEvent> {
-    private final Repository<Long, Utilizator> userRepo;
+    private final PagingRepository<Long, Utilizator> userRepo;
     private final Repository<Tuple<Long,Long>, Prietenie> prietenieRepo;
     private final MessageRepository messageRepo;
     private final FriendRequestRepository friendRequestRepo;
@@ -30,7 +34,7 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
     private List<Observer<UserChangeEvent>> observers = new ArrayList<>();
 
     private static Long usersID;
-    public UserService(Repository<Long, Utilizator> userRepo, Repository<Tuple<Long, Long>, Prietenie> prietenieRepo, MessageRepository messageRepo, FriendRequestRepository friendRequestRepo){
+    public UserService(PagingRepository<Long, Utilizator> userRepo, Repository<Tuple<Long, Long>, Prietenie> prietenieRepo, MessageRepository messageRepo, FriendRequestRepository friendRequestRepo){
         usersID = 0L;
         this.userRepo = userRepo;
         this.prietenieRepo = prietenieRepo;
@@ -73,6 +77,12 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
         return usersID;
     }
 
+    private static String encryptPassword(String password) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hashedPassword = md.digest(password.getBytes());
+        return Base64.getEncoder().encodeToString(hashedPassword);
+    }
+
     /**
      * creates an entity with firstName and lastName
      * adds the entity if it's valid, and it isn't already saved
@@ -87,8 +97,12 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
      *
      */
 
-    public boolean addEntity(String firstName, String lastName) throws RepositoryExceptions {
-        Utilizator entity = new Utilizator(firstName, lastName);
+    public boolean addEntity(String firstName, String lastName, String email, String password) throws RepositoryExceptions, Exception {
+        //TODO: cripteaza parola!!!!!
+
+        String newPassword = encryptPassword(password);
+
+        Utilizator entity = new Utilizator(firstName, lastName, email, newPassword);
         //entity.setId(generateID());
         Optional<Utilizator> savedUser = userRepo.save(entity);
         if (savedUser.isEmpty()){
@@ -110,7 +124,8 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
     }
 
     public boolean updateEntity(Long id, String firstName, String lastName) throws RepositoryExceptions{
-        Utilizator entity = new Utilizator(firstName, lastName);
+        Optional<Utilizator> e = userRepo.findOne(id);
+        Utilizator entity = new Utilizator(firstName, lastName, e.get().getEmail(), e.get().getPassword());
         entity.setId(id);
         Optional<Utilizator> updatedUser = userRepo.update(entity);
         if (updatedUser.isEmpty()){
@@ -398,6 +413,15 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
         to.add(user2);
         Message message = new Message(user1, to, content, LocalDateTime.now());
         messageRepo.reply(message, chat.getId());
+    }
+
+    public Page<Utilizator> getUsersOnPage(Pageable pageable){
+        return userRepo.findAll(pageable);
+    }
+
+    public Optional<Utilizator> findUserByEmailPassword(String email, String password) throws Exception{
+        String newPassword = encryptPassword(password);
+        return userRepo.findUserByEmailPassword(email, newPassword);
     }
 
 }

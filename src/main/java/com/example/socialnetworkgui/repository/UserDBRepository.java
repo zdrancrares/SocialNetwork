@@ -4,12 +4,15 @@ import com.example.socialnetworkgui.config.DatabaseConnectionConfig;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.domain.validators.Validator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PagingRepository;
 
 import java.sql.*;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class UserDBRepository implements Repository<Long, Utilizator> {
+public class UserDBRepository implements PagingRepository<Long, Utilizator> {
     private final Validator<Utilizator> validator;
     public UserDBRepository(Validator<Utilizator> validator){
         this.validator = validator;
@@ -33,25 +36,31 @@ public class UserDBRepository implements Repository<Long, Utilizator> {
             getUserStatement.setLong(1, aLong);
             ResultSet resultSet = getUserStatement.executeQuery();
             if (resultSet.next()) {
-                Utilizator user = new Utilizator(null, null);
+                Utilizator user = new Utilizator(null, null, null, null);
                 user.setId(resultSet.getLong(1));
                 user.setFirstName(resultSet.getString(2));
                 user.setLastName(resultSet.getString(3));
+                user.setEmail(resultSet.getString(4));
+                user.setPassword(resultSet.getString(5));
 
                 ArrayList<Utilizator> friends = new ArrayList<>();
 
-                if (resultSet.getString(5) != null) {
-                    Utilizator friend = new Utilizator(null, null);
-                    friend.setId(resultSet.getLong(4));
-                    friend.setFirstName(resultSet.getString(5));
-                    friend.setLastName(resultSet.getString(6));
+                if (resultSet.getString(7) != null) {
+                    Utilizator friend = new Utilizator(null, null, null, null);
+                    friend.setId(resultSet.getLong(6));
+                    friend.setFirstName(resultSet.getString(7));
+                    friend.setLastName(resultSet.getString(8));
+                    friend.setEmail(resultSet.getString(9));
+                    friend.setPassword(resultSet.getString(10));
                     friends.add(friend);
 
                     while (resultSet.next()) {
-                        friend = new Utilizator(null, null);
-                        friend.setId(resultSet.getLong(4));
-                        friend.setFirstName(resultSet.getString(5));
-                        friend.setLastName(resultSet.getString(6));
+                        friend = new Utilizator(null, null, null, null);
+                        friend.setId(resultSet.getLong(6));
+                        friend.setFirstName(resultSet.getString(7));
+                        friend.setLastName(resultSet.getString(8));
+                        friend.setEmail(resultSet.getString(9));
+                        friend.setPassword(resultSet.getString(10));
                         friends.add(friend);
                     }
                 }
@@ -76,8 +85,10 @@ public class UserDBRepository implements Repository<Long, Utilizator> {
             while(usersResultSet.next()){
                 String firstName = usersResultSet.getString("first_name");
                 String lastName = usersResultSet.getString("last_name");
+                String email = usersResultSet.getString("email");
+                String password = usersResultSet.getString("password");
                 Long id = usersResultSet.getLong("id");
-                Utilizator currentUser = new Utilizator(firstName, lastName);
+                Utilizator currentUser = new Utilizator(firstName, lastName, email, password);
                 currentUser.setId(id);
                 users.add(currentUser);
             }
@@ -94,7 +105,7 @@ public class UserDBRepository implements Repository<Long, Utilizator> {
             throw new RepositoryExceptions("Utilizatorul nu poate sa fie null");
         }
         validator.validate(entity);
-        String insertSqlStatement = "insert into users(first_name,last_name) values(?,?)";
+        String insertSqlStatement = "insert into users(first_name,last_name,email,password) values(?,?,?,?)";
         Optional<Utilizator> result = Optional.empty();
         try(Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
                 DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
@@ -102,6 +113,8 @@ public class UserDBRepository implements Repository<Long, Utilizator> {
         ){
             insertStatement.setString(1, entity.getFirstName());
             insertStatement.setString(2, entity.getLastName());
+            insertStatement.setString(3, entity.getEmail());
+            insertStatement.setString(4, entity.getPassword());
             if (insertStatement.executeUpdate() > 0){
                 ResultSet resultSet = insertStatement.getGeneratedKeys();
                 resultSet.next();
@@ -172,5 +185,77 @@ public class UserDBRepository implements Repository<Long, Utilizator> {
             System.out.println(e.getMessage());
         }
         return result;
+    }
+
+    private int returnNumberOfElements(){
+        int number = 0;
+        try (Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
+                DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
+            PreparedStatement statement = connection.prepareStatement("select count(*) as count from users");
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                number = resultSet.getInt("count");
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return number;
+    }
+
+    @Override
+    public Page<Utilizator> findAll(Pageable pageable) {
+        int numberOfElements = returnNumberOfElements();
+        int limit = pageable.getPageSize();
+        int offset = pageable.getPageSize() * pageable.getPageNumber();
+        if (offset >= numberOfElements){
+            return new Page<>(new HashSet<>(), numberOfElements);
+        }
+        HashSet<Utilizator> users = new HashSet<>();
+        try(Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
+                DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
+            PreparedStatement statement = connection.prepareStatement("select * from users limit ? offset ?");
+        ){
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+            ResultSet usersResultSet = statement.executeQuery();
+            while(usersResultSet.next()){
+                String firstName = usersResultSet.getString("first_name");
+                String lastName = usersResultSet.getString("last_name");
+                String email = usersResultSet.getString("email");
+                String password = usersResultSet.getString("password");
+                Long id = usersResultSet.getLong("id");
+                Utilizator currentUser = new Utilizator(firstName, lastName, email,password);
+                currentUser.setId(id);
+                users.add(currentUser);
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return new Page<>(users, numberOfElements);
+    }
+
+    @Override
+    public Optional<Utilizator> findUserByEmailPassword(String email, String password) {
+        String selectUserStatement = "select * from users where email=? and password=?";
+        try(Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
+                DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
+            PreparedStatement getUserStatement = connection.prepareStatement(selectUserStatement);
+        ){
+            getUserStatement.setString(1, email);
+            getUserStatement.setString(2, password);
+            ResultSet userResultSet = getUserStatement.executeQuery();
+            if(userResultSet.next()){
+                String firstName = userResultSet.getString("first_name");
+                String lastName = userResultSet.getString("last_name");
+                Long id = userResultSet.getLong("id");
+                Utilizator currentUser = new Utilizator(firstName, lastName, email, password);
+                currentUser.setId(id);
+                return Optional.of(currentUser);
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return Optional.empty();
     }
 }

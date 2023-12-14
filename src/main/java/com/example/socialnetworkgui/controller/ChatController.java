@@ -15,9 +15,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 
 import java.net.URL;
 
@@ -31,11 +33,17 @@ public class ChatController {
     @FXML
     VBox chatContainer;
 
+    @FXML
+    HBox textFieldContainer;
+
     Stage dialogStage;
     Utilizator user1;
     Utilizator user2;
     @FXML
     TextField sendReply;
+
+    @FXML
+    Button sendMessageChat;
 
     @FXML
     Button sendMessage;
@@ -88,10 +96,30 @@ public class ChatController {
         scrollPane.setMinHeight(350);
 
         sendReply = new TextField();
+        sendReply.setMinWidth(250);
+        sendMessageChat = new Button("Send");
+
+        textFieldContainer = new HBox(10);
+        textFieldContainer.getChildren().clear();
+        textFieldContainer.getChildren().addAll(sendReply, sendMessageChat);
+        textFieldContainer.setAlignment(Pos.CENTER_RIGHT);
+
+        sendMessageChat.setOnAction(event -> {
+            try {
+                handleSendMessage(new ActionEvent());
+            }catch (Exception e){
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
+        });
+
+        sendReply.setOnKeyPressed(event->{
+            if (event.getCode() == KeyCode.ENTER){
+                handleSendMessage(new ActionEvent());
+            }
+        });
 
         main.getChildren().clear();
-        main.getChildren().addAll(scrollPane, sendReply);
-
+        main.getChildren().addAll(scrollPane, textFieldContainer);
     }
 
     public void handleSendReply(ActionEvent actionEvent, MessageDTO chat) throws RepositoryExceptions, ServiceExceptions {
@@ -105,11 +133,24 @@ public class ChatController {
         initChat();
     }
 
+    public void handleSendMessage(ActionEvent actionEvent){
+        ArrayList<Utilizator> to = new ArrayList<>();
+        to.add(user2);
+        try {
+            userService.addMessage(sendReply.getText(), user1.getId(), to);
+            //MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Send message details", "Mesajul a fost trimis cu succes.");
+            initChat();
+        }catch(Exception e){
+            MessageAlert.showErrorMessage(null, e.getMessage());
+        }
+        sendReply.setText("");
+    }
+
     private VBox createMessageBox(MessageDTO chat, Utilizator user){
         HBox messageBox = new HBox(10);
 
         //Label dateLabel = new Label(chat.getDate().toString());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH:mm");
         Label dateLabel = new Label(chat.getDate().format(formatter));
 
         Label userNameLabel = new Label(user.getFirstName() + " " + user.getLastName());

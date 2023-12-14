@@ -8,6 +8,8 @@ public class UtilizatorValidator implements Validator<Utilizator> {
         String errors = "";
         errors += validateFirstName(entity.getFirstName());
         errors += validateLastName(entity.getLastName());
+        errors += validateEmail(entity.getEmail());
+        errors += validatePassword(entity.getPassword());
         if (!errors.isEmpty()){
             throw new ValidationException(errors);
         }
@@ -31,6 +33,28 @@ public class UtilizatorValidator implements Validator<Utilizator> {
         }
         if (lastName.length() > 50){
             errors += "Lungimea numelui nu poate sa depaseasca 50 de caractere.\n";
+        }
+        return errors;
+    }
+
+    private static String validateEmail(String email) throws ValidationException{
+        String errors = "";
+        if (email.isEmpty()){
+            errors += "Lungimea email-ului nu poate sa fie nula.\n";
+        }
+        if (email.length() > 4 && email.length() < 50){
+            errors += "Lungimea email-ului trebuie sa fie cuprinsa intre 5 si 50 de caractere.\n";
+        }
+        return errors;
+    }
+
+    private static String validatePassword(String password) throws ValidationException{
+        String errors = "";
+        if (password.isEmpty()){
+            errors += "Lungimea parolei nu poate sa fie nula.\n";
+        }
+        if (password.length() > 7 && password.length() < 30){
+            errors += "Lungimea parolei trebuie sa fie cuprinsa intre 8 si 30 de caractere.\n";
         }
         return errors;
     }

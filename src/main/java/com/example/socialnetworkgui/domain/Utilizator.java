@@ -11,11 +11,16 @@ import java.util.function.Predicate;
 public class Utilizator extends Entity<Long> {
     private String firstName;
     private String lastName;
+    private String email;
+    private String password;
+
     private ArrayList<Utilizator> friends;
 
-    public Utilizator(String firstName, String lastName) {
+    public Utilizator(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.password = password;
         friends = new ArrayList<>();
     }
 
@@ -41,6 +46,22 @@ public class Utilizator extends Entity<Long> {
 
     public void setFriends(ArrayList<Utilizator> friends){
         this.friends = friends;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**

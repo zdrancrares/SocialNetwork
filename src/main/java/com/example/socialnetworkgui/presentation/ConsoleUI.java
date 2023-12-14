@@ -11,7 +11,7 @@ import com.example.socialnetworkgui.service.UserService;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
+/*
 public class ConsoleUI {
     private Scanner scanner;
     private UserService userService;
@@ -262,3 +262,6 @@ public class ConsoleUI {
         }
     }
 }
+
+
+ */

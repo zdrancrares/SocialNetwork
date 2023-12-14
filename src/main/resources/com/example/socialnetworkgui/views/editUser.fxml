@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="anchor-pane" stylesheets="@../controller/css/styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.AuthController">
+   <stylesheets>
+      <URL value="@../controller/css/styles.css" />
+   </stylesheets>
+   <children>
+      <TextField fx:id="textFieldLastName" layoutX="203.0" layoutY="36.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <TextField fx:id="textFieldFirstName" layoutX="203.0" layoutY="98.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <Label fx:id="lastNameLabel" layoutX="141.0" layoutY="58.0" styleClass="label" text="NUME" />
+      <Label fx:id="firstNameLabel" layoutX="112.0" layoutY="110.0" prefHeight="18.0" prefWidth="75.0" styleClass="label" text="PRENUME" />
+      <Button onAction="#handleLogIn" fx:id="authButton" layoutX="21.0" layoutY="350.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="96.0" styleClass="button" text="Sign Up" />
+      <Button layoutX="126.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleClearButton" prefHeight="36.0" prefWidth="87.0" styleClass="button" text="Clear" />
+      <Button layoutX="490.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="36.0" prefWidth="96.0" styleClass="button" text="Cancel" />
+      <ImageView fitHeight="25.0" fitWidth="23.0" layoutX="180.0" layoutY="356.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../icons/clear.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="90.0" layoutY="359.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../icons/save.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="23.0" fitWidth="23.0" layoutX="555.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../icons/cancel.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="textFieldEmail" layoutX="203.0" layoutY="164.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <PasswordField fx:id="passwordField" layoutX="203.0" layoutY="233.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <Label layoutX="124.0" layoutY="178.0" prefHeight="16.0" prefWidth="51.0" styleClass="label" text="EMAIL" />
+      <Label fx:id="passwordLabel" layoutX="121.0" layoutY="247.0" styleClass="label" text="PAROLA" />
+   </children>
+</AnchorPane>

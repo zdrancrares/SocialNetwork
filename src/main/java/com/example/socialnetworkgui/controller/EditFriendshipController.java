@@ -243,9 +243,11 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
             }
             ArrayList<Utilizator> to = new ArrayList<>();
             for (FriendshipDTO friend: friends){
-                Utilizator user = new Utilizator(friend.getFirstName(), friend.getLastName());
-                user.setId(friend.getId());
-                to.add(user);
+                Optional<Utilizator> f = userService.getEntity(friend.getId());
+                //Utilizator user = new Utilizator(friend.getFirstName(), friend.getLastName());
+                //user.setId(friend.getId());
+                //to.add(user);
+                to.add(f.get());
             }
             userService.addMessage(messageTextField.getText(), user.getId(), to);
             MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Send message details", "Mesajul a fost trimis cu succes.");
@@ -282,9 +284,11 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
             return;
         }
         try{
-            Utilizator user2 = new Utilizator(friendToAccept.getFirstName(), friendToAccept.getLastName());
-            user2.setId(friendToAccept.getId().getLeft());
-            friendshipService.addEntity(user, user2);
+            Optional<Utilizator> user2 = userService.getEntity(friendToAccept.getId().getLeft());
+            //Utilizator user2 = new Utilizator(friendToAccept.getFirstName(), friendToAccept.getLastName());
+            //user2.setId(friendToAccept.getId().getLeft());
+            //friendshipService.addEntity(user, user2);
+            friendshipService.addEntity(user, user2.get());
             MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Friend request details", "Cererea a fost acceptata.");
         }catch(Exception e){
             MessageAlert.showErrorMessage(null, e.getMessage());
@@ -299,9 +303,11 @@ public class EditFriendshipController implements Observer<UserChangeEvent> {
             return;
         }
         try{
-            Utilizator user2 = new Utilizator(friendToReject.getFirstName(), friendToReject.getLastName());
-            user2.setId(friendToReject.getId().getLeft());
-            userService.rejectFriendRequest(user, user2);
+            Optional<Utilizator> user2 = userService.getEntity(friendToReject.getId().getLeft());
+            //Utilizator user2 = new Utilizator(friendToReject.getFirstName(), friendToReject.getLastName());
+            //user2.setId(friendToReject.getId().getLeft());
+            //userService.rejectFriendRequest(user, user2);
+            userService.rejectFriendRequest(user, user2.get());
             MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "Friend request details", "Cererea a fost respinsa.");
         }catch(Exception e){
             MessageAlert.showErrorMessage(null, e.getMessage());

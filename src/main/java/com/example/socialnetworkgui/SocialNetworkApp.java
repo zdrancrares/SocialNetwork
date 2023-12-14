@@ -1,5 +1,6 @@
 package com.example.socialnetworkgui;
 
+import com.example.socialnetworkgui.controller.AuthController;
 import com.example.socialnetworkgui.controller.UserController;
 import com.example.socialnetworkgui.domain.Message;
 import com.example.socialnetworkgui.domain.Prietenie;
@@ -9,6 +10,7 @@ import com.example.socialnetworkgui.domain.validators.PrietenieValidator;
 import com.example.socialnetworkgui.domain.validators.UtilizatorValidator;
 import com.example.socialnetworkgui.domain.validators.Validator;
 import com.example.socialnetworkgui.repository.*;
+import com.example.socialnetworkgui.repository.paging.PagingRepository;
 import com.example.socialnetworkgui.service.FriendshipService;
 import com.example.socialnetworkgui.service.UserService;
 import javafx.application.Application;
@@ -22,7 +24,7 @@ import java.util.Objects;
 
 public class SocialNetworkApp extends Application {
     private Validator<Utilizator> userValidator;
-    private Repository<Long, Utilizator> userRepo;
+    private PagingRepository<Long, Utilizator> userRepo;
     private UserService userService;
     private FriendshipService friendshipService;
     private Validator<Prietenie> friendshipValidator;
@@ -50,8 +52,9 @@ public class SocialNetworkApp extends Application {
     }
 
     public void initView(Stage stage) throws IOException{
+
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("views/mainView.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("views/editUser.fxml"));
 
             Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
             stage.getIcons().add(icon);
@@ -59,8 +62,9 @@ public class SocialNetworkApp extends Application {
             Scene scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);
 
-            UserController userController = fxmlLoader.getController();
-            userController.setUserService(userService, friendshipService);
+            AuthController authController = fxmlLoader.getController();
+            authController.setService(userService, friendshipService, stage, true);
+
     }
     public static void main(String[] args){
         launch(args);

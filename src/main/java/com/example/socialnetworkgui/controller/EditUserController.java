@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -20,6 +21,12 @@ public class EditUserController {
     private TextField textFieldFirstName;
     @FXML
     private TextField textFieldLastName;
+    @FXML
+    private TextField textFieldEmail;
+    @FXML
+    private TextField textFieldPassword;
+    @FXML
+    private Label passwordLabel;
     private UserService service;
     Stage dialogStage;
     Utilizator user;
@@ -30,7 +37,12 @@ public class EditUserController {
         this.user = utilizator;
         if (utilizator != null){
             setFields(utilizator);
+
             textFieldId.setEditable(false);
+            textFieldEmail.setEditable(false);
+
+            textFieldPassword.setVisible(false);
+            passwordLabel.setVisible(false);
         }
         else {
             this.textFieldId.setAlignment(Pos.CENTER);
@@ -47,6 +59,7 @@ public class EditUserController {
         this.textFieldId.setText(user.getId().toString());
         this.textFieldFirstName.setText(user.getFirstName());
         this.textFieldLastName.setText(user.getLastName());
+        this.textFieldEmail.setText(user.getEmail());
     }
     @FXML
     public void handleCancelButton(ActionEvent event){
@@ -61,9 +74,12 @@ public class EditUserController {
     public void handleSaveButton(ActionEvent event) {
         String firstName = this.textFieldFirstName.getText();
         String lastName = this.textFieldLastName.getText();
+        String email = this.textFieldEmail.getText();
+        String password = this.textFieldPassword.getText();
+
         if (user == null){
             try {
-                this.service.addEntity(firstName, lastName);
+                this.service.addEntity(firstName, lastName, email, password);
                 MessageAlert.showMessage(dialogStage, Alert.AlertType.CONFIRMATION, "Save details", "Utilizatorul a fost adaugat cu succes.");
                 dialogStage.close();
             }catch (Exception e){

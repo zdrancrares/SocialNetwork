@@ -3,6 +3,8 @@ package com.example.socialnetworkgui.controller;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 import com.example.socialnetworkgui.exceptions.ServiceExceptions;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
 import com.example.socialnetworkgui.service.FriendshipService;
 import com.example.socialnetworkgui.service.UserService;
 import com.example.socialnetworkgui.utils.observer.Observer;
@@ -13,13 +15,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -43,6 +44,21 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     TableColumn<Utilizator, Long> idColumn;
 
+    @FXML
+    Button previousButton;
+
+    @FXML
+    Button nextButton;
+
+    private int currentPage = 0;
+
+    @FXML
+    TextField recordsPerPage;
+
+    private int numberOfRecordsPerPage = 5;
+
+    private int totalNumberOfElements;
+
 
     public void setUserService(UserService userService, FriendshipService friendshipService){
         this.userService = userService;
@@ -50,6 +66,12 @@ public class UserController implements Observer<UserChangeEvent> {
 
         userService.addObserver(this);
         friendshipService.addObserver(this);
+
+        recordsPerPage.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleChangeNumberOfRecords(new ActionEvent());
+            }
+        });
 
         initModel();
     }
@@ -59,13 +81,48 @@ public class UserController implements Observer<UserChangeEvent> {
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<Utilizator, String>("lastName"));
         idColumn.setCellValueFactory(new PropertyValueFactory<Utilizator, Long>("id"));
         tableView.setItems(model);
-        //tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     public void initModel(){
-        Iterable<Utilizator> users = userService.getAll();
-        List<Utilizator> userList = StreamSupport.stream(users.spliterator(), false).toList();
-        //System.out.println(userList);
+        Page<Utilizator> usersOnCurrentPage = userService.getUsersOnPage(new Pageable(currentPage, numberOfRecordsPerPage));
+        totalNumberOfElements = usersOnCurrentPage.getTotalNumberOfElements();
+
+        //System.out.println(totalNumberOfElements);
+        //System.out.println(usersOnCurrentPage);
+
+        //Iterable<Utilizator> users = userService.getAll();
+        List<Utilizator> userList = StreamSupport.stream(usersOnCurrentPage.getElementsOnPage().spliterator(), false).toList();
         model.setAll(userList);
+
+        handlePageNavigationChecks();
+    }
+
+    @FXML
+    public void handleChangeNumberOfRecords(ActionEvent actionEvent){
+        currentPage = 0;
+        try {
+            numberOfRecordsPerPage = Integer.parseInt(recordsPerPage.getText());
+        }catch(Exception e){
+           MessageAlert.showErrorMessage(null, "Nu este un numar valid.");
+           return;
+        }
+        initModel();
+    }
+
+    private void handlePageNavigationChecks(){
+        previousButton.setDisable(currentPage == 0);
+        nextButton.setDisable((currentPage+1)*numberOfRecordsPerPage >= totalNumberOfElements);
+    }
+
+    @FXML
+    public void goToNextPage(ActionEvent actionEvent){
+        currentPage++;
+        initModel();
+    }
+
+    @FXML
+    public void goToPreviousPage(ActionEvent actionEvent){
+        currentPage--;
+        initModel();
     }
 
     @Override
@@ -140,6 +197,8 @@ public class UserController implements Observer<UserChangeEvent> {
             e.printStackTrace();
         }
     }
+
+
     public void showFriendshipEditDialog(Utilizator user) throws RepositoryExceptions, ServiceExceptions{
         try {
             FXMLLoader loader = new FXMLLoader();

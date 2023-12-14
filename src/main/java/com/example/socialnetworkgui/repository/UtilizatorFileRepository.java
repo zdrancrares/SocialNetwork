@@ -5,7 +5,7 @@ import com.example.socialnetworkgui.domain.validators.Validator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 
 import java.util.List;
-
+/*
 public class UtilizatorFileRepository extends AbstractFileRepository<Long, Utilizator> {
 
     public UtilizatorFileRepository(String fileName, Validator<Utilizator> validator) throws RepositoryExceptions {
@@ -26,3 +26,5 @@ public class UtilizatorFileRepository extends AbstractFileRepository<Long, Utili
         return entity.getId()+";"+entity.getFirstName()+";"+entity.getLastName();
     }
 }
+
+ */

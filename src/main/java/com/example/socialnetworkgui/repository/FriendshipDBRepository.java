@@ -44,15 +44,19 @@ public class FriendshipDBRepository implements Repository<Tuple<Long,Long>, Prie
                 p.setId(idPrietenie);
                 p.setDate(searchedFriendship.getTimestamp(3).toLocalDateTime());
 
-                Utilizator u1 = new Utilizator(null, null);
+                Utilizator u1 = new Utilizator(null, null, null, null);
                 u1.setFirstName(searchedFriendship.getString(5));
                 u1.setLastName(searchedFriendship.getString(6));
+                u1.setEmail(searchedFriendship.getString(7));
+                u1.setPassword(searchedFriendship.getString(8));
                 u1.setId(searchedFriendship.getLong(4));
 
-                Utilizator u2 = new Utilizator(null, null);
-                u2.setFirstName(searchedFriendship.getString(8));
-                u2.setLastName(searchedFriendship.getString(9));
-                u2.setId(searchedFriendship.getLong(7));
+                Utilizator u2 = new Utilizator(null, null,null, null);
+                u2.setFirstName(searchedFriendship.getString(10));
+                u2.setLastName(searchedFriendship.getString(11));
+                u2.setEmail(searchedFriendship.getString(12));
+                u2.setPassword(searchedFriendship.getString(13));
+                u2.setId(searchedFriendship.getLong(9));
 
                 p.setUser1(u1);
                 p.setUser2(u2);
@@ -79,15 +83,19 @@ public class FriendshipDBRepository implements Repository<Tuple<Long,Long>, Prie
             while(friendshipsResultSet.next()){
                 Prietenie p = new Prietenie(null,null);
 
-                Utilizator u1 = new Utilizator(null, null);
+                Utilizator u1 = new Utilizator(null, null, null, null);
                 u1.setId(friendshipsResultSet.getLong(4));
                 u1.setFirstName(friendshipsResultSet.getString(5));
                 u1.setLastName(friendshipsResultSet.getString(6));
+                u1.setEmail(friendshipsResultSet.getString(7));
+                u1.setPassword(friendshipsResultSet.getString(8));
 
-                Utilizator u2 = new Utilizator(null, null);
-                u2.setId(friendshipsResultSet.getLong(7));
-                u2.setFirstName(friendshipsResultSet.getString(8));
-                u2.setLastName(friendshipsResultSet.getString(9));
+                Utilizator u2 = new Utilizator(null, null, null, null);
+                u2.setId(friendshipsResultSet.getLong(9));
+                u2.setFirstName(friendshipsResultSet.getString(10));
+                u2.setLastName(friendshipsResultSet.getString(11));
+                u2.setEmail(friendshipsResultSet.getString(12));
+                u2.setPassword(friendshipsResultSet.getString(13));
 
                 p.setDate(friendshipsResultSet.getTimestamp(3).toLocalDateTime());
                 p.setUser1(u1);
