@@ -1,5 +1,8 @@
 package com.example.socialnetworkgui.controller;
 
+import com.example.socialnetworkgui.AuthController;
+import com.example.socialnetworkgui.Main;
+import com.example.socialnetworkgui.SocialNetworkApp;
 import com.example.socialnetworkgui.domain.Utilizator;
 import com.example.socialnetworkgui.exceptions.RepositoryExceptions;
 import com.example.socialnetworkgui.exceptions.ServiceExceptions;
@@ -50,6 +53,7 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     Button nextButton;
 
+
     private int currentPage = 0;
 
     @FXML
@@ -59,10 +63,15 @@ public class UserController implements Observer<UserChangeEvent> {
 
     private int totalNumberOfElements;
 
+    private Utilizator user;
+    private Stage stage;
 
-    public void setUserService(UserService userService, FriendshipService friendshipService){
+
+    public void setUserService(UserService userService, FriendshipService friendshipService, Utilizator user, Stage stage){
         this.userService = userService;
         this.friendshipService = friendshipService;
+        this.user = user;
+        this.stage = stage;
 
         userService.addObserver(this);
         friendshipService.addObserver(this);
@@ -83,7 +92,7 @@ public class UserController implements Observer<UserChangeEvent> {
         tableView.setItems(model);
     }
     public void initModel(){
-        Page<Utilizator> usersOnCurrentPage = userService.getUsersOnPage(new Pageable(currentPage, numberOfRecordsPerPage));
+        Page<Utilizator> usersOnCurrentPage = userService.getUsersOnPage(new Pageable(currentPage, numberOfRecordsPerPage), user.getId());
         totalNumberOfElements = usersOnCurrentPage.getTotalNumberOfElements();
 
         //System.out.println(totalNumberOfElements);
@@ -166,13 +175,7 @@ public class UserController implements Observer<UserChangeEvent> {
 
     @FXML
     public void handleFriendshipsUser(ActionEvent event) throws ServiceExceptions, RepositoryExceptions{
-        Utilizator selectedUser = tableView.getSelectionModel().getSelectedItem();
-        if (selectedUser != null){
-            showFriendshipEditDialog(selectedUser);
-        }
-        else{
-            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator.");
-        }
+        showFriendshipEditDialog();
     }
 
     public void showUserEditDialog(Utilizator utilizator){
@@ -199,7 +202,7 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
 
-    public void showFriendshipEditDialog(Utilizator user) throws RepositoryExceptions, ServiceExceptions{
+    public void showFriendshipEditDialog() throws RepositoryExceptions, ServiceExceptions{
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("views/editFriendship.fxml"));
@@ -216,6 +219,33 @@ public class UserController implements Observer<UserChangeEvent> {
 
             EditFriendshipController editFriendshipController = loader.getController();
             editFriendshipController.setFriendshipService(userService, friendshipService, dialogStage, user);
+
+            dialogStage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleLogOut(ActionEvent actionEvent){
+        try {
+            stage.close();
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(SocialNetworkApp.class.getResource("views/editUser.fxml"));
+            AnchorPane root = loader.load();
+            Stage dialogStage = new Stage();
+
+            Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("assets/socialAppIcon.png")));
+            dialogStage.getIcons().add(icon);
+
+            dialogStage.setTitle("Log In");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+
+            AuthController authController = loader.getController();
+            authController.setService(userService, friendshipService, dialogStage, true);
 
             dialogStage.show();
         }catch (IOException e){

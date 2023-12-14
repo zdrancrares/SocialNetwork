@@ -42,7 +42,7 @@ public class UtilizatorValidator implements Validator<Utilizator> {
         if (email.isEmpty()){
             errors += "Lungimea email-ului nu poate sa fie nula.\n";
         }
-        if (email.length() > 4 && email.length() < 50){
+        if (!(email.length() > 4 && email.length() < 50)){
             errors += "Lungimea email-ului trebuie sa fie cuprinsa intre 5 si 50 de caractere.\n";
         }
         return errors;
@@ -53,8 +53,8 @@ public class UtilizatorValidator implements Validator<Utilizator> {
         if (password.isEmpty()){
             errors += "Lungimea parolei nu poate sa fie nula.\n";
         }
-        if (password.length() > 7 && password.length() < 30){
-            errors += "Lungimea parolei trebuie sa fie cuprinsa intre 8 si 30 de caractere.\n";
+        if (!(password.length() > 7 && password.length() < 100)){
+            errors += "Lungimea parolei trebuie sa fie cuprinsa intre 8 si 100 de caractere.\n";
         }
         return errors;
     }

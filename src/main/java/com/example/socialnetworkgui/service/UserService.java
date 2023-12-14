@@ -98,7 +98,6 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
      */
 
     public boolean addEntity(String firstName, String lastName, String email, String password) throws RepositoryExceptions, Exception {
-        //TODO: cripteaza parola!!!!!
 
         String newPassword = encryptPassword(password);
 
@@ -415,8 +414,8 @@ public class UserService implements Service<Long, Utilizator>, Observable<UserCh
         messageRepo.reply(message, chat.getId());
     }
 
-    public Page<Utilizator> getUsersOnPage(Pageable pageable){
-        return userRepo.findAll(pageable);
+    public Page<Utilizator> getUsersOnPage(Pageable pageable, Long id){
+        return userRepo.findAll(pageable, id);
     }
 
     public Optional<Utilizator> findUserByEmailPassword(String email, String password) throws Exception{

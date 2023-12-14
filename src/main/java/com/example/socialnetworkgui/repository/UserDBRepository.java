@@ -192,8 +192,8 @@ public class UserDBRepository implements PagingRepository<Long, Utilizator> {
         try (Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
                 DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
             PreparedStatement statement = connection.prepareStatement("select count(*) as count from users");
-            ResultSet resultSet = statement.executeQuery();
         ){
+            ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
                 number = resultSet.getInt("count");
             }
@@ -204,8 +204,8 @@ public class UserDBRepository implements PagingRepository<Long, Utilizator> {
     }
 
     @Override
-    public Page<Utilizator> findAll(Pageable pageable) {
-        int numberOfElements = returnNumberOfElements();
+    public Page<Utilizator> findAll(Pageable pageable, Long userId) {
+        int numberOfElements = returnNumberOfElements() - 1;
         int limit = pageable.getPageSize();
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         if (offset >= numberOfElements){
@@ -214,10 +214,11 @@ public class UserDBRepository implements PagingRepository<Long, Utilizator> {
         HashSet<Utilizator> users = new HashSet<>();
         try(Connection connection = DriverManager.getConnection(DatabaseConnectionConfig.DB_URL,
                 DatabaseConnectionConfig.DB_USER, DatabaseConnectionConfig.DB_PASS);
-            PreparedStatement statement = connection.prepareStatement("select * from users limit ? offset ?");
+            PreparedStatement statement = connection.prepareStatement("select * from users where id <> ? limit ? offset ?");
         ){
-            statement.setInt(1, limit);
-            statement.setInt(2, offset);
+            statement.setLong(1, userId);
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             ResultSet usersResultSet = statement.executeQuery();
             while(usersResultSet.next()){
                 String firstName = usersResultSet.getString("first_name");

@@ -1,8 +1,5 @@
 package com.example.socialnetworkgui;
 
-import com.example.socialnetworkgui.controller.AuthController;
-import com.example.socialnetworkgui.controller.UserController;
-import com.example.socialnetworkgui.domain.Message;
 import com.example.socialnetworkgui.domain.Prietenie;
 import com.example.socialnetworkgui.domain.Tuple;
 import com.example.socialnetworkgui.domain.Utilizator;
@@ -47,7 +44,7 @@ public class SocialNetworkApp extends Application {
         friendshipService = new FriendshipService(friendshipRepo, friendRequestRepo);
 
         initView(primaryStage);
-        primaryStage.setTitle("SocialNetworkApp");
+        primaryStage.setTitle("Log In");
         primaryStage.show();
     }
 
