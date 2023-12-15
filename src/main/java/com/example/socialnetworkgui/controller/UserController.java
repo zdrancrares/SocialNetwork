@@ -95,10 +95,6 @@ public class UserController implements Observer<UserChangeEvent> {
         Page<Utilizator> usersOnCurrentPage = userService.getUsersOnPage(new Pageable(currentPage, numberOfRecordsPerPage), user.getId());
         totalNumberOfElements = usersOnCurrentPage.getTotalNumberOfElements();
 
-        //System.out.println(totalNumberOfElements);
-        //System.out.println(usersOnCurrentPage);
-
-        //Iterable<Utilizator> users = userService.getAll();
         List<Utilizator> userList = StreamSupport.stream(usersOnCurrentPage.getElementsOnPage().spliterator(), false).toList();
         model.setAll(userList);
 
@@ -140,37 +136,42 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     public void handleDeleteUser(ActionEvent actionEvent) throws RepositoryExceptions, ServiceExceptions {
-        Utilizator selectedUser = tableView.getSelectionModel().getSelectedItem();
-        if (selectedUser != null){
-            Utilizator toBeDeleted = userService.deleteEntity(selectedUser.getId());
-            if (toBeDeleted != null){
-                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Delete", "Utilizatorul a fost sters cu succes.");
+
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation");
+        confirmationAlert.setHeaderText("Are you sure you want to delete the account?");
+
+        confirmationAlert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                try {
+                    deleteAccount();
+                }catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+            } else {
+                System.out.println("Ștergerea contului a fost anulată.");
             }
-            else{
-                MessageAlert.showErrorMessage(null, "Nu exista niciun utilizator cu acest ID.");
-            }
-        }
-        else{
-            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator.");
-        }
+        });
 
     }
 
-    @FXML
-    public void handleAddUser(ActionEvent event){
-        showUserEditDialog(null);
+    public void deleteAccount() throws RepositoryExceptions, ServiceExceptions{
+        Utilizator toBeDeleted = userService.deleteEntity(user.getId());
+        if (toBeDeleted != null){
+            MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Delete", "Utilizatorul a fost sters cu succes.");
+            handleLogOut(new ActionEvent());
+        }
+        else{
+            MessageAlert.showErrorMessage(null, "Nu exista niciun utilizator cu acest ID.");
+        }
     }
 
     @FXML
     public void handleUpdateUser(ActionEvent event){
-        Utilizator selectedUser = tableView.getSelectionModel().getSelectedItem();
-        if (selectedUser != null){
-            showUserEditDialog(selectedUser);
-            update(null);
-        }
-        else{
-            MessageAlert.showErrorMessage(null, "Nu ati selectat niciun utilizator.");
-        }
+        showUserEditDialog(user);
+        update(null);
     }
 
     @FXML
@@ -180,8 +181,10 @@ public class UserController implements Observer<UserChangeEvent> {
 
     public void showUserEditDialog(Utilizator utilizator){
         try {
+            stage.close();
+
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("views/editUser.fxml"));
+            loader.setLocation(getClass().getResource("views/updateProfile.fxml"));
             AnchorPane root = loader.load();
             Stage dialogStage = new Stage();
 
@@ -193,11 +196,11 @@ public class UserController implements Observer<UserChangeEvent> {
             dialogStage.setScene(scene);
 
             EditUserController editUserController = loader.getController();
-            editUserController.setService(userService, dialogStage, utilizator);
+            editUserController.setService(userService, friendshipService, dialogStage, utilizator);
 
             dialogStage.show();
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -222,7 +225,7 @@ public class UserController implements Observer<UserChangeEvent> {
 
             dialogStage.show();
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -249,7 +252,7 @@ public class UserController implements Observer<UserChangeEvent> {
 
             dialogStage.show();
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

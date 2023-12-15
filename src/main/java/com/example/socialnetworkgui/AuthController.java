@@ -77,7 +77,7 @@ public class AuthController {
             passwordField.setText("");
 
             authButton.setText("Sign Up");
-            authLabel.setText("Aveti deja un cont?");
+            authLabel.setText("Aveti deja un cont? Conectati-va!");
             changeAuthButton.setText("Log In");
         }
 
@@ -145,6 +145,8 @@ public class AuthController {
             }
             else{
                 MessageAlert.showMessage(stage, Alert.AlertType.ERROR, "Log in error", "Email sau parola incorecta.");
+                this.textFieldEmail.setText("");
+                this.passwordField.setText("");
             }
         }catch(Exception e){
             MessageAlert.showMessage(stage, Alert.AlertType.ERROR, "Password encrypt error", e.getMessage());
