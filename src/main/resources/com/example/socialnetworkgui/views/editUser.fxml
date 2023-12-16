@@ -10,13 +10,12 @@
       <URL value="@../controller/css/styles.css" />
    </stylesheets>
    <children>
-      <TextField fx:id="textFieldLastName" layoutX="203.0" layoutY="36.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
-      <TextField fx:id="textFieldFirstName" layoutX="203.0" layoutY="98.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
-      <Label fx:id="lastNameLabel" layoutX="141.0" layoutY="58.0" styleClass="label" text="NUME" />
-      <Label fx:id="firstNameLabel" layoutX="112.0" layoutY="110.0" prefHeight="18.0" prefWidth="75.0" styleClass="label" text="PRENUME" />
+      <TextField fx:id="textFieldLastName" layoutX="203.0" layoutY="22.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <TextField fx:id="textFieldFirstName" layoutX="203.0" layoutY="84.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <Label fx:id="lastNameLabel" layoutX="149.0" layoutY="36.0" styleClass="label" text="NUME" />
+      <Label fx:id="firstNameLabel" layoutX="121.0" layoutY="96.0" prefHeight="18.0" prefWidth="75.0" styleClass="label" text="PRENUME" />
       <Button fx:id="authButton" layoutX="21.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleLogIn" prefHeight="36.0" prefWidth="96.0" styleClass="button" text="Sign Up" />
       <Button layoutX="126.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleClearButton" prefHeight="36.0" prefWidth="87.0" styleClass="button" text="Clear" />
-      <Button layoutX="498.0" layoutY="18.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="36.0" prefWidth="96.0" styleClass="button" text="Cancel" />
       <ImageView fitHeight="25.0" fitWidth="23.0" layoutX="180.0" layoutY="356.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/clear.png" />
@@ -27,16 +26,15 @@
             <Image url="@../icons/save.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="23.0" fitWidth="23.0" layoutX="562.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../icons/cancel.png" />
-         </image>
-      </ImageView>
-      <TextField fx:id="textFieldEmail" layoutX="203.0" layoutY="164.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
-      <PasswordField fx:id="passwordField" layoutX="203.0" layoutY="233.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
-      <Label layoutX="124.0" layoutY="178.0" prefHeight="16.0" prefWidth="51.0" styleClass="label" text="EMAIL" />
-      <Label fx:id="passwordLabel" layoutX="121.0" layoutY="247.0" styleClass="label" text="PAROLA" />
+      <TextField fx:id="textFieldEmail" layoutX="203.0" layoutY="142.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <PasswordField fx:id="passwordField" layoutX="203.0" layoutY="200.0" prefHeight="43.0" prefWidth="258.0" styleClass="text-field" />
+      <Label layoutX="144.0" layoutY="156.0" prefHeight="16.0" prefWidth="51.0" styleClass="label" text="EMAIL" />
+      <Label fx:id="passwordLabel" layoutX="130.0" layoutY="214.0" styleClass="label" text="PAROLA" />
       <Label fx:id="authLabel" layoutX="397.0" layoutY="320.0" text="Nu aveti cont? Inregistrati-va!" />
       <Button fx:id="changeAuthButton" layoutX="456.0" layoutY="350.0" mnemonicParsing="false" text="Sign Up" />
+      <Label fx:id="loginLabel" layoutX="264.0" layoutY="45.0" prefHeight="61.0" prefWidth="206.0" text="LOGIN">
+      </Label>
+      <PasswordField fx:id="confirmaParolaField" layoutX="203.0" layoutY="258.0" prefHeight="43.0" prefWidth="258.0" />
+      <Label fx:id="confirmaParolaLabel" layoutX="52.0" layoutY="272.0" prefHeight="16.0" prefWidth="155.0" text="CONFIRMA PAROLA" />
    </children>
 </AnchorPane>

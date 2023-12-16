@@ -139,7 +139,7 @@ public class UserController implements Observer<UserChangeEvent> {
 
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmation");
-        confirmationAlert.setHeaderText("Are you sure you want to delete the account?");
+        confirmationAlert.setHeaderText("Sunteti sigur ca doriti sa stergeti contul?");
 
         confirmationAlert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 

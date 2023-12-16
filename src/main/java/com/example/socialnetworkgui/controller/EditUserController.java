@@ -51,7 +51,7 @@ public class EditUserController {
     }
     @FXML
     public void handleCancelButton(ActionEvent event){
-        this.stage.close();
+        handleChangeToMainPage(user);
     }
     @FXML
     public void handleClearButton(ActionEvent event){
@@ -95,7 +95,7 @@ public class EditUserController {
 
             dialogStage.show();
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

@@ -42,6 +42,12 @@ public class AuthController {
     private Button changeAuthButton;
     @FXML
     private Label authLabel;
+    @FXML
+    private Label loginLabel;
+    @FXML
+    private Label confirmaParolaLabel;
+    @FXML
+    private PasswordField confirmaParolaField;
     private UserService userService;
     private FriendshipService friendshipService;
     private Stage stage;
@@ -54,10 +60,15 @@ public class AuthController {
         this.flag = flag;
 
         if (flag){ // log-in
+            loginLabel.setVisible(true);
+            loginLabel.setStyle("-fx-font-size: 36;");
+
             textFieldFirstName.setVisible(false);
             textFieldLastName.setVisible(false);
             firstNameLabel.setVisible(false);
             lastNameLabel.setVisible(false);
+            confirmaParolaField.setVisible(false);
+            confirmaParolaLabel.setVisible(false);
 
             authButton.setText("Log In");
             authLabel.setText("Nu aveti cont? Inregistrati-va!");
@@ -68,8 +79,14 @@ public class AuthController {
 
         }
         else { //sign-up
+            loginLabel.setVisible(false);
+
             textFieldFirstName.setVisible(true);
             textFieldLastName.setVisible(true);
+            firstNameLabel.setVisible(true);
+            lastNameLabel.setVisible(true);
+            confirmaParolaField.setVisible(true);
+            confirmaParolaLabel.setVisible(true);
 
             this.textFieldFirstName.setText("");
             this.textFieldLastName.setText("");
@@ -111,6 +128,7 @@ public class AuthController {
         this.textFieldLastName.setText("");
         this.textFieldEmail.setText("");
         this.passwordField.setText("");
+        this.confirmaParolaField.setText("");
     }
 
     @FXML
@@ -157,6 +175,17 @@ public class AuthController {
     public void handleSignUp(ActionEvent actionEvent){
         String email = textFieldEmail.getText();
         String password = passwordField.getText();
+        String confirmedPassword = confirmaParolaField.getText();
+
+        if (!Objects.equals(password, confirmedPassword)){
+
+            MessageAlert.showMessage(stage, Alert.AlertType.ERROR, "Password error", "Parolele nu sunt la fel.");
+
+            passwordField.setText("");
+            confirmaParolaField.setText("");
+
+            return;
+        }
 
         try {
             Optional<Utilizator> foundUser = userService.findUserByEmailPassword(email, password);
